@@ -1,4 +1,5 @@
 package cn.zhgliu.ezdp.consts;
 
-public class ValueType {
+public enum ValueType {
+    CONSTANT,PROPERTY,ALL_VALUE
 }
