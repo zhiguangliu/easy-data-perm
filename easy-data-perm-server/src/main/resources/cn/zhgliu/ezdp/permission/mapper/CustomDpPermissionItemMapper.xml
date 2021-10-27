@@ -4,6 +4,7 @@
 
     <select id="selectItemsWithRoleId" resultType="cn.zhgliu.ezdp.permission.entity.WithRoleDpPermissionItem">
         SELECT c.role_id,
+               d.metadata_id,
                g.target_table_name,
                g.filed_name,
                g.filed_type,

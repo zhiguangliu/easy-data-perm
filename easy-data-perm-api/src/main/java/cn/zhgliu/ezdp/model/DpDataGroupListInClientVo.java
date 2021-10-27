@@ -11,9 +11,10 @@ public class DpDataGroupListInClientVo implements Serializable {
 
     private Integer id;
 
-    private Integer dataGroupId;
+//    private Integer dataGroupId;
+    private Integer metadataId;
 
-    private Integer templateId;
+//    private Integer templateId;
 
     private Integer templateListId;
 
@@ -71,41 +72,50 @@ public class DpDataGroupListInClientVo implements Serializable {
         this.id = id;
     }
 
+    public Integer getMetadataId() {
+        return metadataId;
+    }
+
+    public DpDataGroupListInClientVo setMetadataId(Integer metadataId) {
+        this.metadataId = metadataId;
+        return this;
+    }
+
     /**
      * 获取权限组主键
      *
      * @return data_group_id - 权限组主键
      */
-    public Integer getDataGroupId() {
-        return dataGroupId;
-    }
+//    public Integer getDataGroupId() {
+//        return dataGroupId;
+//    }
 
     /**
      * 设置权限组主键
      *
      * @param dataGroupId 权限组主键
      */
-    public void setDataGroupId(Integer dataGroupId) {
-        this.dataGroupId = dataGroupId;
-    }
+//    public void setDataGroupId(Integer dataGroupId) {
+//        this.dataGroupId = dataGroupId;
+//    }
 
     /**
      * 获取模板主键
      *
      * @return template_id - 模板主键
      */
-    public Integer getTemplateId() {
-        return templateId;
-    }
+//    public Integer getTemplateId() {
+//        return templateId;
+//    }
 
     /**
      * 设置模板主键
      *
      * @param templateId 模板主键
      */
-    public void setTemplateId(Integer templateId) {
-        this.templateId = templateId;
-    }
+//    public void setTemplateId(Integer templateId) {
+//        this.templateId = templateId;
+//    }
 
     /**
      * 获取模板列表主键
