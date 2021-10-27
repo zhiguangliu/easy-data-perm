@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zhgliu.ezdp.permission.mapper.CustomDpPermissionItemMapper">
+
+    <select id="selectItemsWithRoleId" resultType="cn.zhgliu.ezdp.permission.entity.WithRoleDpPermissionItem">
+        SELECT c.role_id,
+               g.target_table_name,
+               g.filed_name,
+               g.filed_type,
+               e.relation,
+               e.value_type,
+               e.filed_value
+        FROM  dp_role_permission_relation c
+                 LEFT JOIN dp_permission d ON c.permission_id = d.id
+                 LEFT JOIN dp_permission_metadata f ON d.metadata_id = f.id
+                 LEFT JOIN dp_permission_item e ON e.permission_id = d.id
+        LEFT JOIN dp_permission_item_metadata g on e.metadata_id= g.id
+        WHERE f.operation_identifier = #{operationIdentifier}
+          and c.role_id IN (
+            SELECT a.role_id
+            FROM dp_role_user a
+            WHERE a.sub_system_code = #{subsystem}
+              AND a.user_id = #{userId}
+        )
+    </select>
+
+</mapper>

@@ -12,6 +12,5 @@ public interface DataPermClient {
      * @param queryId
      * @return
      */
-    String addPermitionCondition(String sql, String userId, String queryId);
-    String addPermitionCondition(String subSystem, String sql, String userId, String queryId);
+    String addPermissionCondition(String sql, String userId, String operationIdentifier);
 }

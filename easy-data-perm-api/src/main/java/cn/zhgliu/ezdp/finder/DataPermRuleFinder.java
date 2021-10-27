@@ -16,5 +16,5 @@ public interface DataPermRuleFinder {
      * @param queryId 操作标识
      * @return 按角色分组的双层权限列表。第一层的List是按角色划分的，之间是或的关系；第二层的List是角色内的所有权限，将这些权限按filedName分组，分组间是且的关系，分组内是或的关系
      */
-    List<List<DpDataGroupListInClientVo>> findRoleGroupedRules(String subSystem, String userId, String queryId);
+    List<List<DpDataGroupListInClientVo>> findRoleGroupedRules(String subSystem, String userId, String operationIdentifier);
 }
