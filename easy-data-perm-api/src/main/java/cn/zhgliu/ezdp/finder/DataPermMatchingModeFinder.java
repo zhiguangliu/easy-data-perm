@@ -1,11 +1,15 @@
 package cn.zhgliu.ezdp.finder;
 
 
-import cn.zhgliu.ezdp.consts.MatchingMode;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 
+/**
+ * @author zhgliu
+ */
 public interface DataPermMatchingModeFinder {
     /**
      * 此方法用于查找某个子系统的一个查询的匹配模式
+     * @return
      */
-    MatchingMode findMatchingMode(String subSystem, String operationIdentifier);
+    DataPermissionBaseInfo findMatchingMode(String subSystem, String operationIdentifier);
 }

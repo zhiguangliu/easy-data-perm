@@ -8,6 +8,7 @@ import cn.zhgliu.ezdp.exception.DataPermRuleFetchException;
 import cn.zhgliu.ezdp.exception.ResolveSqlFailException;
 import cn.zhgliu.ezdp.finder.DataPermMatchingModeFinder;
 import cn.zhgliu.ezdp.finder.DataPermRuleFinder;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import cn.zhgliu.ezdp.model.DataPermissionItem;
 import cn.zhgliu.ezdp.resolver.DataPermSqlResolver;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -82,8 +83,8 @@ public class BaseDataPermClient implements DataPermClient {
 
         // 获取匹配模式。获取不到使用默认匹配模式
         try {
-            MatchingMode matchingMode = dataPermMatchingModeFinder.findMatchingMode(subSystem, operationIdentifier);
-            currentMatchingMode.set(matchingMode);
+            DataPermissionBaseInfo dataPermissionBaseInfo = dataPermMatchingModeFinder.findMatchingMode(subSystem, operationIdentifier);
+            currentMatchingMode.set(dataPermissionBaseInfo.getMatchingMode());
         } catch (Exception e) {
             log.warn("GETTING MATCHING MODE ERROR. DETAIL REASON IS : {}", e.getMessage());
             currentMatchingMode.set(defaultMatchingMode);

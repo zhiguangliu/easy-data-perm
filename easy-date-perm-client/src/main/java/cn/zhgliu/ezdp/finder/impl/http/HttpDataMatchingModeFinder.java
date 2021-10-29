@@ -1,7 +1,9 @@
 package cn.zhgliu.ezdp.finder.impl.http;
 
-import cn.zhgliu.ezdp.consts.MatchingMode;
+import cn.hutool.json.JSONUtil;
+import cn.zhgliu.ezdp.consts.ParamNames;
 import cn.zhgliu.ezdp.finder.DataPermMatchingModeFinder;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -27,18 +29,19 @@ public class HttpDataMatchingModeFinder implements DataPermMatchingModeFinder {
         this.dataPermServer = dataPermServer;
     }
 
-    @Override
-    public MatchingMode findMatchingMode(String subSystem, String queryId) {
-        String url = "";
+    public static final String MATCHING_MODE_URL = "/api/matchingMode";
 
+    @Override
+    public DataPermissionBaseInfo findMatchingMode(String subSystem, String operationIdentifier) {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             RequestConfig config = RequestConfig.custom()
                     .setConnectionRequestTimeout(1000)
                     .setConnectTimeout(1000)
                     .setSocketTimeout(1000)
                     .build();
-            URIBuilder uriBuilder = new URIBuilder(url);
-            uriBuilder.addParameter("query", "");
+            URIBuilder uriBuilder = new URIBuilder(dataPermServer + MATCHING_MODE_URL);
+            uriBuilder.addParameter(ParamNames.SUBSYSTEM, subSystem);
+            uriBuilder.addParameter(ParamNames.OPERATION_IDENTIFIER, operationIdentifier);
             HttpGet get = new HttpGet(uriBuilder.build());
             get.setConfig(config);
             CloseableHttpResponse response = httpClient.execute(get);
@@ -47,15 +50,12 @@ public class HttpDataMatchingModeFinder implements DataPermMatchingModeFinder {
                 HttpEntity entity = response.getEntity();
                 String result = EntityUtils.toString(entity, "utf-8");
                 log.debug(result);
-            } else {
-                return null;
+                DataPermissionBaseInfo dataPermissionBaseInfo = JSONUtil.parseObj(result).toBean(DataPermissionBaseInfo.class);
+                return dataPermissionBaseInfo;
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
         }
-
-        return MatchingMode.STRICT;
+        return null;
     }
 }

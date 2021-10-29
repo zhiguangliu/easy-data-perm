@@ -1,4 +1,4 @@
-package cn.zhgliu.ezdp.test.helper;
+package test.cn.zhgliu.ezdp.helper;
 
 import cn.zhgliu.ezdp.helper.DataPermHelper;
 import org.junit.Assert;

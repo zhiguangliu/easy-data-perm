@@ -1,6 +1,7 @@
 package cn.zhgliu.ezdp.api.controller;
 
 import cn.zhgliu.ezdp.consts.MatchingMode;
+import cn.zhgliu.ezdp.consts.ParamNames;
 import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import cn.zhgliu.ezdp.model.DataPermissionItem;
 import cn.zhgliu.ezdp.model.FullPermissionInfo;
@@ -32,7 +33,8 @@ public class ApiInterfaceController {
     MatchingMode defaultMatchingMode;
 
     @GetMapping("/matchingMode")
-    public DataPermissionBaseInfo matchingMode(@RequestParam String subsystem, @RequestParam String operationIdentifier) {
+    public DataPermissionBaseInfo matchingMode(@RequestParam(ParamNames.SUBSYSTEM) String subsystem,
+                                               @RequestParam(ParamNames.OPERATION_IDENTIFIER) String operationIdentifier) {
         DpPermissionMetadata param = new DpPermissionMetadata();
         param.setSubSystemCode(subsystem);
         param.setOperationIdentifier(operationIdentifier);
@@ -43,7 +45,9 @@ public class ApiInterfaceController {
     IDpPermissionItemService iDpPermissionItemService;
 
     @GetMapping("/permissions")
-    public Collection<List<DataPermissionItem>> permissions(@RequestParam String subsystem, @RequestParam String operationIdentifier, @RequestParam String userId) {
+    public Collection<List<DataPermissionItem>> permissions(@RequestParam(ParamNames.SUBSYSTEM) String subsystem,
+                                                            @RequestParam(ParamNames.OPERATION_IDENTIFIER) String operationIdentifier,
+                                                            @RequestParam(ParamNames.USER_ID) String userId) {
         return queryPermissions(subsystem, operationIdentifier, userId);
     }
 
@@ -67,7 +71,9 @@ public class ApiInterfaceController {
     }
 
     @GetMapping("/fullPermissionInfo")
-    public FullPermissionInfo matchingModeAndPermissions(@RequestParam String subsystem, @RequestParam String operationIdentifier, @RequestParam String userId) {
+    public FullPermissionInfo matchingModeAndPermissions(@RequestParam(ParamNames.SUBSYSTEM) String subsystem,
+                                                         @RequestParam(ParamNames.OPERATION_IDENTIFIER) String operationIdentifier,
+                                                         @RequestParam(ParamNames.USER_ID) String userId) {
         FullPermissionInfo fullPermissionInfo = new FullPermissionInfo();
         DataPermissionBaseInfo info = matchingMode(subsystem, operationIdentifier);
         Collection<List<DataPermissionItem>> permissions = queryPermissions(subsystem, operationIdentifier, userId);
