@@ -102,7 +102,8 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
 
         groupedRules.set(new HashMap<String, Map<String, List<DataPermissionItem>>>());
         for (DataPermissionItem rule : rules) {
-            if (Relation.valueOf(rule.getRelation())== Relation.NOT_CONTROL) {
+            if (Relation.valueOf(rule.getRelation()) == Relation.NOT_CONTROL
+                    || ValueType.valueOf(rule.getValueType()) == ValueType.ALL_VALUE) {
                 continue;
             }
             Integer metadataId = rule.getMetadataId();
@@ -118,6 +119,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
             }
             List<DataPermissionItem> oneFieldRules = oneGroupRules.get(fieldName);
 
+            log.debug(JSONUtil.toJsonStr(rule));
             oneFieldRules.addAll(PermissionProcessMysqlVisitorHelper.splitRule(rule));
         }
         log.debug(JSONUtil.toJsonPrettyStr(groupedRules.get()));
@@ -134,7 +136,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
             if (StringUtils.isNotEmpty(from.getAlias())) {
                 coreTableAlias = from.getAlias();
             } else {
-                coreTableAlias =  SecureUtil.md5(tableName);
+                coreTableAlias = SecureUtil.md5(tableName);
 //              对于mybatis，在表没有别名的情况下，给表增加一个别名
                 from.setAlias(coreTableAlias);
             }
@@ -197,7 +199,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
         String valueType = DatapermissionItem.getValueType();
         String fieldValue = DatapermissionItem.getFieldValue();
         //获取到的值如果是保留字“EMPTY_VALUE”，则生成 is null or ='' 的条件
-        if (ValueType.valueOf(fieldValue) != ValueType.EMPTY_VALUE) {
+        if (ValueType.valueOf(valueType) != ValueType.EMPTY_VALUE) {
             SQLBinaryOpExpr ret = new SQLBinaryOpExpr();
             String tableAlias = getTableAlias(DatapermissionItem);
             if (StringUtils.isEmpty(tableAlias)) {

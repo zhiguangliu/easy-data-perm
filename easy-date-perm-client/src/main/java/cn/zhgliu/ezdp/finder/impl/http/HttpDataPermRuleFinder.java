@@ -58,19 +58,25 @@ public class HttpDataPermRuleFinder implements DataPermRuleFinder {
                 HttpEntity entity = response.getEntity();
                 String httpResult = EntityUtils.toString(entity, "utf-8");
                 log.debug(httpResult);
-                JSONArray permissionData = JSONUtil.parseArray(httpResult);
-
-                return permissionData.stream().map(innerList -> {
-                    return ((JSONArray) innerList).stream().map(item -> {
-                        return JSONUtil.toBean((JSONObject) item, DataPermissionItem.class);
-                    }).collect(Collectors.toList());
-                }).collect(Collectors.toList());
+                List<List<DataPermissionItem>> collect = stringToList(httpResult);
+                return collect;
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static final List<List<DataPermissionItem>> stringToList(String httpResult) {
+        JSONArray permissionData = JSONUtil.parseArray(httpResult);
+
+        List<List<DataPermissionItem>> collect = permissionData.stream().map(innerList -> {
+            return ((JSONArray) innerList).stream().map(item -> {
+                return JSONUtil.toBean((JSONObject) item, DataPermissionItem.class);
+            }).collect(Collectors.toList());
+        }).collect(Collectors.toList());
+        return collect;
     }
 
 

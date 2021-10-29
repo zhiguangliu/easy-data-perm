@@ -1,0 +1,46 @@
+[
+  [
+    {
+      "metadataId": 1,
+      "applyMethod": "EMBED",
+      "targetTableName": "data_table",
+      "fieldName": "test_field_2",
+      "fieldType": "NUMBER",
+      "relation": "NOT_CONTROL",
+      "valueType": null,
+      "fieldValue": null
+    },
+    {
+      "metadataId": 1,
+      "applyMethod": "EMBED",
+      "targetTableName": "data_table",
+      "fieldName": "test_field_1",
+      "fieldType": "STRING",
+      "relation": "EQUAL",
+      "valueType": "CONSTANT",
+      "fieldValue": "aa,bb"
+    }
+  ],
+  [
+    {
+      "metadataId": 1,
+      "applyMethod": "EMBED",
+      "targetTableName": "data_table",
+      "fieldName": "test_field_2",
+      "fieldType": "NUMBER",
+      "relation": "NOT_EQUAL",
+      "valueType": "CONSTANT",
+      "fieldValue": "133"
+    },
+    {
+      "metadataId": 1,
+      "applyMethod": "EMBED",
+      "targetTableName": "data_table",
+      "fieldName": "test_field_1",
+      "fieldType": "STRING",
+      "relation": "EQUAL",
+      "valueType": "ALL_VALUE",
+      "fieldValue": null
+    }
+  ]
+]
