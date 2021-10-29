@@ -2,10 +2,11 @@ package cn.zhgliu.ezdp.permission.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -28,11 +29,11 @@ public class DpPermissionItemMetadata implements Serializable {
 
     private String targetTableName;
 
-    private String filedName;
+    private String fieldName;
 
-    private String filedDesc;
+    private String fieldDesc;
 
-    private String filedType;
+    private String fieldType;
 
     private String status;
 

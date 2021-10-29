@@ -2,10 +2,13 @@ package cn.zhgliu.ezdp.permission.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -13,10 +16,12 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author zhgliu
- * @since 2021-08-05
+ * @since 2021-10-29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@TableName("dp_permission_item")
 public class DpPermissionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,15 +37,15 @@ public class DpPermissionItem implements Serializable {
 
     private String valueType;
 
-    private String filedValue;
+    private String fieldValue;
 
     private String applyMethod;
 
     private String targetTableName;
 
-    private String filedName;
+    private String fieldName;
 
-    private String filedType;
+    private String fieldType;
 
     private String memo;
 
