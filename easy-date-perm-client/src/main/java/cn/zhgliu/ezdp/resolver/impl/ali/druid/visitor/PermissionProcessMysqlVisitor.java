@@ -4,7 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import cn.zhgliu.ezdp.consts.Relation;
 import cn.zhgliu.ezdp.consts.ValueType;
-import cn.zhgliu.ezdp.model.DpDataGroupListInClientVo;
+import cn.zhgliu.ezdp.model.DataPermissionItem;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
@@ -29,7 +29,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
 
     Logger log = LoggerFactory.getLogger(PermissionProcessMysqlVisitor.class);
 
-    private ThreadLocal<List<DpDataGroupListInClientVo>> localRules;
+    private ThreadLocal<List<DataPermissionItem>> localRules;
 
     /**
      * 这个数据结构的含义是这样的：
@@ -37,15 +37,15 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
      * 第二层的Map是字段名，同一权限组中的相同字段被分为一组，各个字段之间是且的关系
      * 第三层的List是一个字段的多个条件，这些条件之间是或的关系
      */
-    private ThreadLocal<Map<String, Map<String, List<DpDataGroupListInClientVo>>>> groupedRules;
+    private ThreadLocal<Map<String, Map<String, List<DataPermissionItem>>>> groupedRules;
     /**
      * 2021-2-4
      * by:liuzhiguang@ecmsglobal.com
      * 之前的设计存在问题：当一个人有多个角色的时候，查询到的权限列表是将几个角色的权限混到一起返回的，会导致权限混乱。
      * 这次改进是在原来的基础上，再增加一层list，list中按角色将权限分组，最后拼装的时候，将这些组以 or 的关系连接起来。
      **/
-    private ThreadLocal<List<List<DpDataGroupListInClientVo>>> localGroupedRules;
-    private ThreadLocal<List<Map<String, Map<String, List<DpDataGroupListInClientVo>>>>> roleGroupedRules;
+    private ThreadLocal<List<List<DataPermissionItem>>> localGroupedRules;
+    private ThreadLocal<List<Map<String, Map<String, List<DataPermissionItem>>>>> roleGroupedRules;
 
     private ThreadLocal<String> applyMethod;
 
@@ -63,12 +63,12 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
 
     private static PermissionProcessMysqlVisitor instance = new PermissionProcessMysqlVisitor();
 
-    public static PermissionProcessMysqlVisitor getInstanceWithGroupRules(List<List<DpDataGroupListInClientVo>> rules) {
+    public static PermissionProcessMysqlVisitor getInstanceWithGroupRules(List<List<DataPermissionItem>> rules) {
         instance.setLocalGroupedRules(rules);
         return instance;
     }
 
-    private void setLocalGroupedRules(List<List<DpDataGroupListInClientVo>> localGroupedRules) {
+    private void setLocalGroupedRules(List<List<DataPermissionItem>> localGroupedRules) {
         this.localGroupedRules.set(localGroupedRules);
     }
 
@@ -85,23 +85,23 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
         return true;
     }
 
-    private void groupRoleGroupedRules(List<List<DpDataGroupListInClientVo>> lists) {
-        roleGroupedRules.set(new LinkedList<Map<String, Map<String, List<DpDataGroupListInClientVo>>>>());
-        for (List<DpDataGroupListInClientVo> oneRoleRules : lists) {
+    private void groupRoleGroupedRules(List<List<DataPermissionItem>> lists) {
+        roleGroupedRules.set(new LinkedList<Map<String, Map<String, List<DataPermissionItem>>>>());
+        for (List<DataPermissionItem> oneRoleRules : lists) {
             groupRules(oneRoleRules);
-            Map<String, Map<String, List<DpDataGroupListInClientVo>>> stringMapMap = this.groupedRules.get();
+            Map<String, Map<String, List<DataPermissionItem>>> stringMapMap = this.groupedRules.get();
             roleGroupedRules.get().add(stringMapMap);
             this.groupedRules.remove();
         }
     }
 
     //将传入的条件按权限组分组、将逗号分隔的条件拆分成独立的条件
-    private void groupRules(List<DpDataGroupListInClientVo> rules) {
-        DpDataGroupListInClientVo firstRule = rules.get(0);
+    private void groupRules(List<DataPermissionItem> rules) {
+        DataPermissionItem firstRule = rules.get(0);
         applyMethod.set(firstRule.getApplyMethod());
 
-        groupedRules.set(new HashMap<String, Map<String, List<DpDataGroupListInClientVo>>>());
-        for (DpDataGroupListInClientVo rule : rules) {
+        groupedRules.set(new HashMap<String, Map<String, List<DataPermissionItem>>>());
+        for (DataPermissionItem rule : rules) {
             if (Relation.valueOf(rule.getRelation())== Relation.NOT_CONTROL) {
                 continue;
             }
@@ -110,15 +110,15 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
             if (groupedRules.get().get(metadataId.toString()) == null) {
                 groupedRules.get().put(metadataId.toString(), new HashMap<>());
             }
-            Map<String, List<DpDataGroupListInClientVo>> oneGroupRules = groupedRules.get().get(String.valueOf(metadataId));
+            Map<String, List<DataPermissionItem>> oneGroupRules = groupedRules.get().get(String.valueOf(metadataId));
 
-            String filedName = rule.getFiledName();
-            if (oneGroupRules.get(filedName) == null) {
-                oneGroupRules.put(filedName, new LinkedList<>());
+            String fieldName = rule.getFieldName();
+            if (oneGroupRules.get(fieldName) == null) {
+                oneGroupRules.put(fieldName, new LinkedList<>());
             }
-            List<DpDataGroupListInClientVo> oneFieldRules = oneGroupRules.get(filedName);
+            List<DataPermissionItem> oneFieldRules = oneGroupRules.get(fieldName);
 
-            oneFieldRules.addAll(PermissionProcessMysqlVisitorHelper.processRule(rule));
+            oneFieldRules.addAll(PermissionProcessMysqlVisitorHelper.splitRule(rule));
         }
         log.debug(JSONUtil.toJsonPrettyStr(groupedRules.get()));
 
@@ -158,9 +158,9 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
     // 再套一层循环，调用原来的方法，将按角色分组的权限生成druid对象。
     private List<Map<String, Map<String, List<SQLBinaryOpExpr>>>> createRoleBaseConditions() {
         List<Map<String, Map<String, List<SQLBinaryOpExpr>>>> ret = new LinkedList<>();
-        List<Map<String, Map<String, List<DpDataGroupListInClientVo>>>> maps = roleGroupedRules.get();
+        List<Map<String, Map<String, List<DataPermissionItem>>>> maps = roleGroupedRules.get();
         for (int i = 0; i < maps.size(); i++) {
-            Map<String, Map<String, List<DpDataGroupListInClientVo>>> oneRoleConditions = maps.get(i);
+            Map<String, Map<String, List<DataPermissionItem>>> oneRoleConditions = maps.get(i);
             Map<String, Map<String, List<SQLBinaryOpExpr>>> oneRoleDruidOjbects = createBaseConditions(oneRoleConditions);
             ret.add(oneRoleDruidOjbects);
         }
@@ -168,24 +168,24 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
     }
 
     //将整理好的条件，按照原来的结构，转换成druid的条件对象
-    private Map<String, Map<String, List<SQLBinaryOpExpr>>> createBaseConditions(Map<String, Map<String, List<DpDataGroupListInClientVo>>> originalRules) {
+    private Map<String, Map<String, List<SQLBinaryOpExpr>>> createBaseConditions(Map<String, Map<String, List<DataPermissionItem>>> originalRules) {
         //要返回的主结构
         Map<String, Map<String, List<SQLBinaryOpExpr>>> ret = new HashMap<>();
 
-        for (Map.Entry<String, Map<String, List<DpDataGroupListInClientVo>>> stringMapEntry : originalRules.entrySet()) {
+        for (Map.Entry<String, Map<String, List<DataPermissionItem>>> stringMapEntry : originalRules.entrySet()) {
             //建立起对应的第一层结构
             if (ret.get(stringMapEntry.getKey()) == null) {
                 ret.put(stringMapEntry.getKey(), new HashMap<String, List<SQLBinaryOpExpr>>());
             }
 
-            Set<Map.Entry<String, List<DpDataGroupListInClientVo>>> oneGroupRules = stringMapEntry.getValue().entrySet();
-            for (Map.Entry<String, List<DpDataGroupListInClientVo>> oneGroupRule : oneGroupRules) {
+            Set<Map.Entry<String, List<DataPermissionItem>>> oneGroupRules = stringMapEntry.getValue().entrySet();
+            for (Map.Entry<String, List<DataPermissionItem>> oneGroupRule : oneGroupRules) {
                 //建立起第二层结构
                 if (ret.get(stringMapEntry.getKey()).get(oneGroupRule.getKey()) == null) {
                     ret.get(stringMapEntry.getKey()).put(oneGroupRule.getKey(), new LinkedList<SQLBinaryOpExpr>());
                 }
-                for (DpDataGroupListInClientVo DpDataGroupListInClientVo : oneGroupRule.getValue()) {
-                    ret.get(stringMapEntry.getKey()).get(oneGroupRule.getKey()).add(createOneRule(DpDataGroupListInClientVo));
+                for (DataPermissionItem DatapermissionItem : oneGroupRule.getValue()) {
+                    ret.get(stringMapEntry.getKey()).get(oneGroupRule.getKey()).add(createOneRule(DatapermissionItem));
                 }
             }
         }
@@ -193,31 +193,31 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
     }
 
     //根据一个EC的查询条件，创建一个druid的条件对象
-    private SQLBinaryOpExpr createOneRule(DpDataGroupListInClientVo DpDataGroupListInClientVo) {
-        String valueType = DpDataGroupListInClientVo.getValueType();
-        String filedValue = DpDataGroupListInClientVo.getFiledValue();
-        //获取到的值如果是保留字“EMPTY”，则生成 is null or ='' 的条件
-        if (ValueType.valueOf(filedValue) != ValueType.EMPTY) {
+    private SQLBinaryOpExpr createOneRule(DataPermissionItem DatapermissionItem) {
+        String valueType = DatapermissionItem.getValueType();
+        String fieldValue = DatapermissionItem.getFieldValue();
+        //获取到的值如果是保留字“EMPTY_VALUE”，则生成 is null or ='' 的条件
+        if (ValueType.valueOf(fieldValue) != ValueType.EMPTY_VALUE) {
             SQLBinaryOpExpr ret = new SQLBinaryOpExpr();
-            String tableAlias = getTableAlias(DpDataGroupListInClientVo);
+            String tableAlias = getTableAlias(DatapermissionItem);
             if (StringUtils.isEmpty(tableAlias)) {
-                ret.setLeft(new SQLIdentifierExpr(DpDataGroupListInClientVo.getFiledName()));
+                ret.setLeft(new SQLIdentifierExpr(DatapermissionItem.getFieldName()));
             } else {
-                ret.setLeft(new SQLPropertyExpr(tableAlias, DpDataGroupListInClientVo.getFiledName()));
+                ret.setLeft(new SQLPropertyExpr(tableAlias, DatapermissionItem.getFieldName()));
             }
-            ret.setRight(getValueExpr(DpDataGroupListInClientVo));
-            ret.setOperator(getOperator(DpDataGroupListInClientVo.getRelation()));
+            ret.setRight(getValueExpr(DatapermissionItem));
+            ret.setOperator(getOperator(DatapermissionItem.getRelation()));
             return ret;
         } else {
             //这段代码改的比较难看，实现的目的是当设置了值为“EMPTY”的时候，生成查询空值的条件
             SQLBinaryOpExpr finalRet = new SQLBinaryOpExpr();
 
             SQLBinaryOpExpr ret = new SQLBinaryOpExpr();
-            String tableAlias = getTableAlias(DpDataGroupListInClientVo);
+            String tableAlias = getTableAlias(DatapermissionItem);
             if (StringUtils.isEmpty(tableAlias)) {
-                ret.setLeft(new SQLIdentifierExpr(DpDataGroupListInClientVo.getFiledName()));
+                ret.setLeft(new SQLIdentifierExpr(DatapermissionItem.getFieldName()));
             } else {
-                ret.setLeft(new SQLPropertyExpr(tableAlias, DpDataGroupListInClientVo.getFiledName()));
+                ret.setLeft(new SQLPropertyExpr(tableAlias, DatapermissionItem.getFieldName()));
             }
             ret.setOperator(SQLBinaryOperator.Equality);
             ret.setRight(new MySqlCharExpr(""));
@@ -226,9 +226,9 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
 
             SQLBinaryOpExpr ret1 = new SQLBinaryOpExpr();
             if (StringUtils.isEmpty(tableAlias)) {
-                ret1.setLeft(new SQLIdentifierExpr(DpDataGroupListInClientVo.getFiledName()));
+                ret1.setLeft(new SQLIdentifierExpr(DatapermissionItem.getFieldName()));
             } else {
-                ret1.setLeft(new SQLPropertyExpr(tableAlias, DpDataGroupListInClientVo.getFiledName()));
+                ret1.setLeft(new SQLPropertyExpr(tableAlias, DatapermissionItem.getFieldName()));
             }
             ret1.setOperator(SQLBinaryOperator.Is);
             ret1.setRight(new SQLNullExpr());
@@ -241,8 +241,8 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
     }
 
     //根据EC对象，获取当前字段对应表别名，如果没有，返回null
-    private String getTableAlias(DpDataGroupListInClientVo DpDataGroupListInClientVo) {
-        String targetTableName = DpDataGroupListInClientVo.getTargetTableName();
+    private String getTableAlias(DataPermissionItem DatapermissionItem) {
+        String targetTableName = DatapermissionItem.getTargetTableName();
         if (StringUtils.isEmpty(targetTableName)) {
             return null;
         }

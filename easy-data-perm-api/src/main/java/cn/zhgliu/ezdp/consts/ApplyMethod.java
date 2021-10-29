@@ -1,6 +1,6 @@
 package cn.zhgliu.ezdp.consts;
 
-public enum ApplyMode {
+public enum ApplyMethod {
   EMBED(), wrapper();
 
 }

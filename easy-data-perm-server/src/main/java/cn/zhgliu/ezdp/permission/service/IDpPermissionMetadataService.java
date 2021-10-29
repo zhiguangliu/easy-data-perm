@@ -1,6 +1,6 @@
 package cn.zhgliu.ezdp.permission.service;
 
-import cn.zhgliu.ezdp.consts.MatchingMode;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,6 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDpPermissionMetadataService extends IService<DpPermissionMetadata> {
 
-    MatchingMode matchingMode(DpPermissionMetadata dpPermissionMetadata);
+    DataPermissionBaseInfo matchingMode(DpPermissionMetadata dpPermissionMetadata);
 
 }

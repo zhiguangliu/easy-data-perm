@@ -8,7 +8,7 @@ import cn.zhgliu.ezdp.exception.DataPermRuleFetchException;
 import cn.zhgliu.ezdp.exception.ResolveSqlFailException;
 import cn.zhgliu.ezdp.finder.DataPermMatchingModeFinder;
 import cn.zhgliu.ezdp.finder.DataPermRuleFinder;
-import cn.zhgliu.ezdp.model.DpDataGroupListInClientVo;
+import cn.zhgliu.ezdp.model.DataPermissionItem;
 import cn.zhgliu.ezdp.resolver.DataPermSqlResolver;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -90,7 +90,7 @@ public class BaseDataPermClient implements DataPermClient {
         }
 
         // 获取规则
-        List<List<DpDataGroupListInClientVo>> rules = null;
+        List<List<DataPermissionItem>> rules = null;
         try {
             rules = dataPermRuleFinder.findRoleGroupedRules(subSystem, userId, operationIdentifier);
         } catch (Exception e) {

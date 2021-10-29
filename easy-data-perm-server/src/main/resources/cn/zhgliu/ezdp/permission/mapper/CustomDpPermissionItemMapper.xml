@@ -7,16 +7,16 @@
                d.metadata_id,
                f.apply_method,
                g.target_table_name,
-               g.filed_name,
-               g.filed_type,
+               g.field_name,
+               g.field_type,
                e.relation,
                e.value_type,
-               e.filed_value
-        FROM  dp_role_permission_relation c
+               e.field_value
+        FROM dp_role_permission_relation c
                  LEFT JOIN dp_permission d ON c.permission_id = d.id
                  LEFT JOIN dp_permission_metadata f ON d.metadata_id = f.id
                  LEFT JOIN dp_permission_item e ON e.permission_id = d.id
-        LEFT JOIN dp_permission_item_metadata g on e.metadata_id= g.id
+                 LEFT JOIN dp_permission_item_metadata g on e.metadata_id = g.id
         WHERE f.operation_identifier = #{operationIdentifier}
           and c.role_id IN (
             SELECT a.role_id

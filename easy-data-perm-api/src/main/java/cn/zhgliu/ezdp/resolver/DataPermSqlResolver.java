@@ -1,7 +1,7 @@
 package cn.zhgliu.ezdp.resolver;
 
 
-import cn.zhgliu.ezdp.model.DpDataGroupListInClientVo;
+import cn.zhgliu.ezdp.model.DataPermissionItem;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public interface DataPermSqlResolver {
      * @param rules
      * @return
      */
-    String resolveSqlWithGroupRule(String sql, List<List<DpDataGroupListInClientVo>> rules);
+    String resolveSqlWithGroupRule(String sql, List<List<DataPermissionItem>> rules);
 }

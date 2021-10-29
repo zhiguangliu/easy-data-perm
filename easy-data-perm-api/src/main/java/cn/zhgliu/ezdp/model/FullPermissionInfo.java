@@ -1,26 +1,31 @@
 package cn.zhgliu.ezdp.model;
 
-import cn.zhgliu.ezdp.consts.ApplyMode;
+import cn.zhgliu.ezdp.consts.ApplyMethod;
 import cn.zhgliu.ezdp.consts.MatchingMode;
 
+import java.util.Collection;
 import java.util.List;
 
-public class ActurallyPermissionGroup {
-    ApplyMode applyMode;
+/**
+ * @author zhgliu
+ */
+public class FullPermissionInfo {
+    ApplyMethod applyMethod;
     MatchingMode matchingMode;
     /**
      * 第一层是角色，每个角色对应一个项目
      * 第二层是每个角色的各个字段
      * 第三层是一个字段的多个值
      */
-    List<List<List<DataPermissionItem>>> permissions;
+    Collection<List<DataPermissionItem>> permissions;
 
-    public ApplyMode getApplyMode() {
-        return applyMode;
+    public ApplyMethod getApplyMethod() {
+        return applyMethod;
     }
 
-    public void setApplyMode(ApplyMode applyMode) {
-        this.applyMode = applyMode;
+    public FullPermissionInfo setApplyMethod(ApplyMethod applyMethod) {
+        this.applyMethod = applyMethod;
+        return this;
     }
 
     public MatchingMode getMatchingMode() {
@@ -31,11 +36,11 @@ public class ActurallyPermissionGroup {
         this.matchingMode = matchingMode;
     }
 
-    public List<List<List<DataPermissionItem>>> getPermissions() {
+    public Collection<List<DataPermissionItem>> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<List<List<DataPermissionItem>>> permissions) {
+    public void setPermissions(Collection<List<DataPermissionItem>> permissions) {
         this.permissions = permissions;
     }
 }

@@ -3,14 +3,14 @@ package cn.zhgliu.ezdp.model;
 /**
  * @author zhgliu
  */
-public class DpClientParam {
+public class RpcParam {
     private String sql;
 
     private String userId;
 
     private String queryId;
 
-    public DpClientParam(String sql, String userId, String queryId) {
+    public RpcParam(String sql, String userId, String queryId) {
         this.sql = sql;
         this.userId = userId;
         this.queryId = queryId;

@@ -1,8 +1,9 @@
 package cn.zhgliu.ezdp.api.controller;
 
-import cn.zhgliu.ezdp.comm.CommonWebResult;
 import cn.zhgliu.ezdp.consts.MatchingMode;
-import cn.zhgliu.ezdp.model.DpDataGroupListInClientVo;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
+import cn.zhgliu.ezdp.model.DataPermissionItem;
+import cn.zhgliu.ezdp.model.FullPermissionInfo;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import cn.zhgliu.ezdp.permission.entity.WithRoleDpPermissionItem;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionItemService;
@@ -31,37 +32,49 @@ public class ApiInterfaceController {
     MatchingMode defaultMatchingMode;
 
     @GetMapping("/matchingMode")
-    public CommonWebResult matchingMode(@RequestParam String subsystem, @RequestParam String operationIdentifier) {
+    public DataPermissionBaseInfo matchingMode(@RequestParam String subsystem, @RequestParam String operationIdentifier) {
         DpPermissionMetadata param = new DpPermissionMetadata();
         param.setSubSystemCode(subsystem);
         param.setOperationIdentifier(operationIdentifier);
-        MatchingMode result = iDpPermissionMetadataService.matchingMode(param);
-        return CommonWebResult.success().setData(result != null ? result : defaultMatchingMode);
+        return iDpPermissionMetadataService.matchingMode(param);
     }
 
     @Resource
     IDpPermissionItemService iDpPermissionItemService;
 
     @GetMapping("/permissions")
-    public Collection<List<DpDataGroupListInClientVo>> permissions(@RequestParam String subsystem, @RequestParam String operationIdentifier, @RequestParam String userId) {
-        List<WithRoleDpPermissionItem> ret = iDpPermissionItemService.findPermissionItems(subsystem, operationIdentifier, userId);
-        Map<Integer, List<DpDataGroupListInClientVo>> tempMap = new HashMap<>();
-        ret.stream().forEach(item->{
-            DpDataGroupListInClientVo target = new DpDataGroupListInClientVo();
-            BeanUtils.copyProperties(item, target);
-            if (!tempMap.containsKey(item.getRoleId())) {
-                tempMap.put(item.getRoleId(), new LinkedList<>());
-            }
-            tempMap.get(item.getRoleId()).add(target);
-        });
-
-        Collection<List<DpDataGroupListInClientVo>> values = tempMap.values();
-        return values;
+    public Collection<List<DataPermissionItem>> permissions(@RequestParam String subsystem, @RequestParam String operationIdentifier, @RequestParam String userId) {
+        return queryPermissions(subsystem, operationIdentifier, userId);
     }
 
-    @GetMapping("/matchingModeAndPermissions")
-    public Object matchingModeAndPermissions(@RequestParam String subsystem, @RequestParam String statementCode) {
-        return "success";
+    private Collection<List<DataPermissionItem>> queryPermissions(String subsystem, String operationIdentifier, String userId) {
+        List<WithRoleDpPermissionItem> ret = iDpPermissionItemService.findPermissionItems(subsystem, operationIdentifier, userId);
+        if (ret.size() > 0) {
+            Map<Integer, List<DataPermissionItem>> tempMap = new HashMap<>();
+            ret.stream().forEach(item -> {
+                DataPermissionItem target = new DataPermissionItem();
+                BeanUtils.copyProperties(item, target);
+                if (!tempMap.containsKey(item.getRoleId())) {
+                    tempMap.put(item.getRoleId(), new LinkedList<>());
+                }
+                tempMap.get(item.getRoleId()).add(target);
+            });
+
+            return tempMap.values();
+        } else {
+            return new LinkedList<>();
+        }
+    }
+
+    @GetMapping("/fullPermissionInfo")
+    public FullPermissionInfo matchingModeAndPermissions(@RequestParam String subsystem, @RequestParam String operationIdentifier, @RequestParam String userId) {
+        FullPermissionInfo fullPermissionInfo = new FullPermissionInfo();
+        DataPermissionBaseInfo info = matchingMode(subsystem, operationIdentifier);
+        Collection<List<DataPermissionItem>> permissions = queryPermissions(subsystem, operationIdentifier, userId);
+        fullPermissionInfo.setMatchingMode(info.getMatchingMode());
+        fullPermissionInfo.setApplyMethod(info.getApplyMethod());
+        fullPermissionInfo.setPermissions(permissions);
+        return fullPermissionInfo;
     }
 
 

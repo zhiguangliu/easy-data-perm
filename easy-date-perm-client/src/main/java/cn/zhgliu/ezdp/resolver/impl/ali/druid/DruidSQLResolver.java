@@ -1,7 +1,7 @@
 package cn.zhgliu.ezdp.resolver.impl.ali.druid;
 
 
-import cn.zhgliu.ezdp.model.DpDataGroupListInClientVo;
+import cn.zhgliu.ezdp.model.DataPermissionItem;
 import cn.zhgliu.ezdp.resolver.DataPermSqlResolver;
 import cn.zhgliu.ezdp.resolver.impl.ali.druid.visitor.PermissionProcessMysqlVisitor;
 import com.alibaba.druid.sql.SQLUtils;
@@ -20,7 +20,7 @@ public class DruidSQLResolver implements DataPermSqlResolver {
     Logger log = LoggerFactory.getLogger(DruidSQLResolver.class);
 
     @Override
-    public String resolveSqlWithGroupRule(String sql, List<List<DpDataGroupListInClientVo>> rules) {
+    public String resolveSqlWithGroupRule(String sql, List<List<DataPermissionItem>> rules) {
         if (rules == null || rules.size() == 0) {
             return sql;
         }

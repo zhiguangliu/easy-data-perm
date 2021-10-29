@@ -1,6 +1,8 @@
 package cn.zhgliu.ezdp.permission.service.impl;
 
+import cn.zhgliu.ezdp.consts.ApplyMethod;
 import cn.zhgliu.ezdp.consts.MatchingMode;
+import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import cn.zhgliu.ezdp.permission.mapper.DpPermissionMetadataMapper;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionMetadataService;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author zhgliu
@@ -20,9 +22,11 @@ import org.springframework.stereotype.Service;
 public class DpPermissionMetadataServiceImpl extends ServiceImpl<DpPermissionMetadataMapper, DpPermissionMetadata> implements IDpPermissionMetadataService {
 
     @Override
-    public MatchingMode matchingMode(DpPermissionMetadata dpPermissionMetadata) {
+    public DataPermissionBaseInfo matchingMode(DpPermissionMetadata dpPermissionMetadata) {
         DpPermissionMetadata result = this.baseMapper.selectOne(new QueryWrapper<>(dpPermissionMetadata));
-        return result != null ? MatchingMode.valueOf(result.getMatchingMode()) : null;
+        MatchingMode matchingMode = MatchingMode.valueOf(result.getMatchingMode());
+        ApplyMethod applyMethod = ApplyMethod.valueOf(result.getApplyMethod());
+        return new DataPermissionBaseInfo(matchingMode, applyMethod);
     }
 
     public static void main(String[] args) {
