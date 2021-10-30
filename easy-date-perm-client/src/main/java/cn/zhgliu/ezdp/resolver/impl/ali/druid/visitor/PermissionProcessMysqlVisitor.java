@@ -1,6 +1,5 @@
 package cn.zhgliu.ezdp.resolver.impl.ali.druid.visitor;
 
-import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import cn.zhgliu.ezdp.consts.Relation;
 import cn.zhgliu.ezdp.consts.ValueType;
@@ -136,7 +135,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
             if (StringUtils.isNotEmpty(from.getAlias())) {
                 coreTableAlias = from.getAlias();
             } else {
-                coreTableAlias = SecureUtil.md5(tableName);
+                coreTableAlias = tableName;
 //              对于mybatis，在表没有别名的情况下，给表增加一个别名
                 from.setAlias(coreTableAlias);
             }

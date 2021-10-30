@@ -13,8 +13,8 @@ import java.util.List;
 
 public class TestDruidSQLResolver {
 
-    private static final String SQL_WITH_ALIAS = "select * from data_table a";
-    private static final String SQL_WITHOUT_ALIAS = "select * from data_table";
+    private static final String SQL_WITH_ALIAS = "select * from data_table a where a.original_field = 3";
+    private static final String SQL_WITHOUT_ALIAS = "select * from data_table where original_field = 3";
 
 
     @Test
