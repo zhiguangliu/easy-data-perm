@@ -59,11 +59,4 @@ public class DpSubSystemController {
     }
 
 
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello world!";
-    }
-
-
-
 }
