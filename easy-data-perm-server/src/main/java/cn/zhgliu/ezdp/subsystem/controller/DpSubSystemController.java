@@ -1,86 +1,69 @@
 package cn.zhgliu.ezdp.subsystem.controller;
 
 
+import cn.hutool.json.JSONUtil;
 import cn.zhgliu.ezdp.comm.CommonWebResult;
 import cn.zhgliu.ezdp.subsystem.entity.DpSubSystem;
 import cn.zhgliu.ezdp.subsystem.service.IDpSubSystemService;
-import cn.zhgliu.layui.model.LayuiPage;
+import cn.zhgliu.ezdp.web.BatchData;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author zhgliu
  * @since 2021-08-05
  */
 @RestController
-@RequestMapping({"/DpSubSystem","/rest/DpSubSystem"})
+@RequestMapping({"/DpSubSystem", "/rest/DpSubSystem"})
+@Slf4j
 public class DpSubSystemController {
 
-    @Autowired
+    @Resource
     IDpSubSystemService iDpSubSystemService;
 
-
-    public DpSubSystemController() {
-        System.out.println("----------================DpSubSystemController");
+    @GetMapping("/all")
+    public List<DpSubSystem> all() {
+        List<DpSubSystem> list = iDpSubSystemService.list(null);
+        return list;
     }
 
-
-
-    @RequestMapping(value = "/findByPage",method = RequestMethod.GET)
-    public LayuiPage findByPage(Integer page, Integer limit, DpSubSystem dpSubSystem) {
-        System.out.println("VIEW======================");
-        Page pageparam = new Page(page, limit);
-        QueryWrapper<DpSubSystem> wrapper = new QueryWrapper<>(dpSubSystem);
-//        wrapper.excludeColumns()
-        IPage page1 = iDpSubSystemService.page(pageparam, wrapper);
-        List records = page1.getRecords();
-        return new LayuiPage(0,120,records,"hello world!");
+    @PostMapping("/data")
+    @Transactional(rollbackFor = Exception.class)
+    public CommonWebResult data(@RequestBody BatchData<DpSubSystem> data) {
+        log.debug(JSONUtil.toJsonStr(data));
+        if (data.getDel() != null && !data.getDel().isEmpty()) {
+            data.getDel().stream().forEach(item -> {
+                iDpSubSystemService.remove(new QueryWrapper<>(item));
+            });
+        }
+        if (data.getEdit() != null && !data.getEdit().isEmpty()) {
+            data.getEdit().stream().forEach(item -> {
+                iDpSubSystemService.updateById(item);
+            });
+        }
+        if (data.getAdd() != null && !data.getAdd().isEmpty()) {
+            data.getAdd().stream().forEach(item -> {
+                iDpSubSystemService.save(item);
+            });
+        }
+        return CommonWebResult.success();
     }
+
 
     @RequestMapping("/hello")
     public String hello() {
         return "hello world!";
     }
 
-
-    public CommonWebResult save(DpSubSystem dpSubSystem) {
-        iDpSubSystemService.save(dpSubSystem);
-        return CommonWebResult.success();
-    }
-
-    public CommonWebResult update(DpSubSystem dpSubSystem) {
-        //TODO 待完善
-//        iDpSubSystemService.update(null);
-        return CommonWebResult.success();
-    }
-
-    public CommonWebResult remove(DpSubSystem dpSubSystem) {
-        //TODO 待完善
-        iDpSubSystemService.remove(null);
-        return CommonWebResult.success();
-    }
-
-    public CommonWebResult queryAll(DpSubSystem dpSubSystem) {
-        //TODO 待完善
-//        iDpSubSystemService.query();
-        return CommonWebResult.success();
-    }
-    public CommonWebResult query(DpSubSystem dpSubSystem) {
-        //TODO 待完善
-//        iDpSubSystemService.getOne(new QueryWrapper<DpSubSystem>().eq())
-        return CommonWebResult.success();
-    }
 
 
 }

@@ -1,39 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>table模块快速使用</title>
-    <link rel="stylesheet" href="../libs/layui/css/layui.css" media="all">
+    <meta charset="UTF-8">
+    <title>Row Editing in DataGrid - jQuery EasyUI Demo</title>
+
+    <link rel="stylesheet" type="text/css" href="../libs/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../libs/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../libs/easyui/demo/demo.css">
+
+    <script type="text/javascript" src="../libs/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../libs/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../libs/easyui/datagrid-cellediting.js"></script>
+    <script type="text/javascript" src="../libs/easyui/common-toolbar.js"></script>
+    <script type="text/javascript" src="../libs/common.js"></script>
+
 </head>
 <body>
+<h2>Row Editing in DataGrid</h2>
+<p>Click the row to start editing.</p>
+<div style="margin:20px 0;"></div>
 
-<table id="demo" lay-filter="test"></table>
+<table id="DpSubSystemGrid" class="easyui-datagrid" title="Row Editing in DataGrid" style="width:700px;height:auto"
+       data-options="
+                iconCls: 'icon-edit',
+                singleSelect: true,
+                toolbar: '#tb',
+                url: 'http://localhost:8899/ezdp/rest/DpSubSystem/all',
+                method: 'get'
+            ">
+    <thead>
+    <tr>
+        <th data-options="field:'id',width:80">ID</th>
+        <th data-options="field:'subSystemCode',width:80,align:'right',editor:'textbox'">子系统编码</th>
+        <th data-options="field:'subSystemName',width:80,align:'right',editor:'textbox'">子系统名称</th>
+        <th data-options="field:'defaultMatchingMode',width:80,align:'right',
+                            editor:{
+                                type:'combobox',
+                                options:{
+                                    data:[{'text':'严格',value:'STRICT'},{'text':'宽松',value:'LENIENT'}]
+                                }
+                            }">默认匹配模式</th>
+        <th data-options="field:'userInfoProvider',width:250,editor:'textbox'">USER INFO PROVIDER</th>
+    </tr>
+    </thead>
+</table>
 
-<script src="../libs/layui/layui.js"></script>
-<script>
-    layui.use('table', function(){
-        var table = layui.table;
+<div id="tb" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('DpSubSystemGrid')">Append</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeit('DpSubSystemGrid')">Remove</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptit('DpSubSystemGrid',SubSystem.saveData)">Accept</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpSubSystemGrid')">Reject</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>
+</div>
 
-        //第一个实例
-        table.render({
-            elem: '#demo'
-            ,height: 312
-            ,url: '../DpSubSystem/findByPage' //数据接口
-            ,page: true //开启分页
-            ,cols: [[
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'username', title: '用户名', width:80}
-                ,{field: 'sex', title: '性别', width:80, sort: true}
-                ,{field: 'city', title: '城市', width:80}
-                ,{field: 'sign', title: '签名', width: 177}
-                ,{field: 'experience', title: '积分', width: 80, sort: true}
-                ,{field: 'score', title: '评分', width: 80, sort: true}
-                ,{field: 'classify', title: '职业', width: 80}
-                ,{field: 'wealth', title: '财富', width: 135, sort: true}
-            ]]
-        });
-
-    });
-</script>
+<script type="text/javascript" src="subsystem.js"></script>
 </body>
 </html>
+﻿

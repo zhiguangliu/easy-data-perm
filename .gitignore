@@ -12,3 +12,4 @@ buildNumber.properties
 /easy-data-perm-server/.mvn/
 *.iml
 .idea
+demo
