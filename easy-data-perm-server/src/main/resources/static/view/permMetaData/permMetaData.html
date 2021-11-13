@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>权限元数据管理</title>
+
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/demo/demo.css">
+
+    <script type="text/javascript" src="../../libs/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/datagrid-cellediting.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.edatagrid.js"></script>
+    <script type="text/javascript" src="../../libs/common.js"></script>
+
+
+</head>
+<body class="easyui-layout">
+<div data-options="region:'west'" style="width: 600px;">
+    <div id="tb" style="height:auto">
+        <select class="easyui-combobox" name="SubSystemCode" label="子系统" style="width:300px"
+        data-options="url:'../../rest/DpSubSystem/all',valueField:'subSystemCode',textField:'subSystemName',method:'GET'"></select>
+        <input class="easyui-textbox" type="text" name="applicationName"
+               data-options="width:120,labelWidth:60,labelAlign:'right',prompt:'应用名称',label:'应用名称'"/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="append('DpPermissionMetaDataGrid')">查找</a>
+        <br>
+
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('DpPermissionMetaDataGrid')">增加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeit('DpPermissionMetaDataGrid')">Remove</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptit('DpPermissionMetaDataGrid',DpPermissionMetadata.saveData)">Accept</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpPermissionMetaDataGrid')">Reject</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpPermissionMetaDataGrid')));">GetChanges</a>
+    </div>
+
+
+    <table id="DpPermissionMetaDataGrid" class="easyui-datagrid" title="数据操作元数据" style="width:700px;height:auto"
+           data-options="
+                    iconCls: 'icon-edit',
+                    singleSelect: true,
+                    toolbar: '#tb',
+                    pagination:true,
+                    fit:true,
+                    onSelect:function(){console.log(1)},
+<!--                    onSelect:function(){alert(1)},-->
+<!--                    onClickCell:function(){alert(\'onClickCell\')},-->
+<!--                    onClickRow:function(){alert(\'onClickRow\')},-->
+<!--                    onBeforeSelect:function(){alert(\'onBeforeSelect\')},-->
+<!--                    onEndEdit:function(){alert(\'onEndEdit\')},-->
+<!--                    onAfterEdit:function(){alert(\'onAfterEdit\')},-->
+                    url: DpPermissionMetadata.pageUrl,
+                    method: 'get'
+                ">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:80">ID</th>
+            <th data-options="field:'operationName',width:80,align:'right',editor:'textbox'">子系统编码</th>
+            <th data-options="field:'operationIdentifier',width:80,align:'right',editor:'textbox'">子系统名称</th>
+            <th data-options="field:'matchingMode',width:80,align:'right',
+                                editor:{
+                                    type:'combobox',
+                                    options:{
+                                        data:[{'text':'严格',value:'STRICT'},{'text':'宽松',value:'LENIENT'}]
+                                    }
+                                }">默认匹配模式</th>
+            <th data-options="field:'applyMethod',width:250,editor:'textbox'">USER INFO PROVIDER</th>
+        </tr>
+        </thead>
+    </table>
+
+
+
+</div>
+<div data-options="region:'center',title:'操作项元数据',split:true" title="East" style="width:400px;"></div>
+
+<!--<table id="DpSubSystemGrid" class="easyui-datagrid" title="Row Editing in DataGrid" style="width:700px;height:auto"-->
+<!--       data-options="-->
+<!--                iconCls: 'icon-edit',-->
+<!--                singleSelect: true,-->
+<!--                toolbar: '#tb',-->
+<!--                url: 'http://localhost:8899/ezdp/rest/DpSubSystem/all',-->
+<!--                method: 'get'-->
+<!--            ">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th data-options="field:'id',width:80">ID</th>-->
+<!--        <th data-options="field:'subSystemCode',width:80,align:'right',editor:'textbox'">子系统编码</th>-->
+<!--        <th data-options="field:'subSystemName',width:80,align:'right',editor:'textbox'">子系统名称</th>-->
+<!--        <th data-options="field:'defaultMatchingMode',width:80,align:'right',-->
+<!--                            editor:{-->
+<!--                                type:'combobox',-->
+<!--                                options:{-->
+<!--                                    data:[{'text':'严格',value:'STRICT'},{'text':'宽松',value:'LENIENT'}]-->
+<!--                                }-->
+<!--                            }">默认匹配模式</th>-->
+<!--        <th data-options="field:'userInfoProvider',width:250,editor:'textbox'">USER INFO PROVIDER</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--</table>-->
+
+<!--<div id="tb" style="height:auto">-->
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('DpSubSystemGrid')">Append</a>-->
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeit('DpSubSystemGrid')">Remove</a>-->
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptit('DpSubSystemGrid',SubSystem.saveData)">Accept</a>-->
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpSubSystemGrid')">Reject</a>-->
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>-->
+<!--</div>-->
+
+<script type="text/javascript" src="permMetaData.js"></script>
+</body>
+</html>
+﻿
