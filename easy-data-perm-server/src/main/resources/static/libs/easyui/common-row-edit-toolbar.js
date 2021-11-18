@@ -11,21 +11,23 @@ function endEditing(gridId) {
 
 
 function append(gridId) {
-    alert(2998874);
     if (endEditing(gridId)) {
         $('#' + gridId).edatagrid('addRow');
     }
 }
 
 function removeit(gridId) {
-    let cell = $("#" + gridId).datagrid('cell');
-    console.log(JSON.stringify(cell));
-    console.log(cell.index);
-    if (!cell) {
-        return
-    }
-    $("#" + gridId).datagrid('cancelEdit', cell.index)
-        .datagrid('deleteRow', cell.index);
+    $('#' + gridId).edatagrid('destroyRow')
+
+
+    // let cell = $("#" + gridId).datagrid('cell');
+    // console.log(JSON.stringify(cell));
+    // console.log(cell.index);
+    // if (!cell) {
+    //     return
+    // }
+    // $("#" + gridId).datagrid('cancelEdit', cell.index)
+    //     .datagrid('deleteRow', cell.index);
 }
 
 function acceptit(gridId, saveData) {
