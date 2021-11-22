@@ -55,6 +55,7 @@ public class MysqlGenerator {
         gc.setOutputDir(projectPath + "/easy-data-perm-server/src/main/java");
         gc.setAuthor("zhgliu");
         gc.setOpen(false);
+        gc.setFileOverride(true);
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -68,7 +69,7 @@ public class MysqlGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName("permission");
+        pc.setModuleName("subsystem");
         pc.setParent("cn.zhgliu.ezdp");
         mpg.setPackageInfo(pc);
 
@@ -99,7 +100,7 @@ public class MysqlGenerator {
 //        strategy.setSuperEntityClass("com.baomidou.mybatisplus.samples.generator.common.BaseEntity");
         strategy.setEntityLombokModel(true);
 //        strategy.setSuperControllerClass("com.baomidou.mybatisplus.samples.generator.common.BaseController");
-        strategy.setInclude("dp_permission_item_metadata");
+        strategy.setInclude("dp_sub_system");
 //        strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

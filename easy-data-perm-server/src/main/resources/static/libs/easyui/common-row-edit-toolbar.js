@@ -9,33 +9,20 @@ function endEditing(gridId) {
     }
 }
 
-
-function append(gridId) {
+function appendItem(gridId) {
     if (endEditing(gridId)) {
         $('#' + gridId).edatagrid('addRow');
     }
 }
 
-function removeit(gridId) {
+function removeItem(gridId) {
     $('#' + gridId).edatagrid('destroyRow')
-
-
-    // let cell = $("#" + gridId).datagrid('cell');
-    // console.log(JSON.stringify(cell));
-    // console.log(cell.index);
-    // if (!cell) {
-    //     return
-    // }
-    // $("#" + gridId).datagrid('cancelEdit', cell.index)
-    //     .datagrid('deleteRow', cell.index);
 }
 
-function acceptit(gridId, saveData) {
-    if (true) {
-        let data = getChanges(gridId);
-        if (saveData(data)) {
-            $('#' + gridId).datagrid('acceptChanges');
-        }
+function acceptItems(gridId, saveData) {
+    let data = getChanges(gridId);
+    if (saveData(data)) {
+        $('#' + gridId).datagrid('acceptChanges');
     }
 }
 
@@ -45,8 +32,10 @@ function reject(gridId) {
 
 function getChanges(gridId) {
     let data = {"add": [], "del": [], "edit": []}
-    data.add = $('#' + gridId).datagrid('getChanges', 'inserted');
-    data.del = $('#' + gridId).datagrid('getChanges', 'deleted');
-    data.edit = $('#' + gridId).datagrid('getChanges', 'updated');
+    if (endEditing(gridId)) {
+        data.add = $('#' + gridId).datagrid('getChanges', 'inserted');
+        data.del = $('#' + gridId).datagrid('getChanges', 'deleted');
+        data.edit = $('#' + gridId).datagrid('getChanges', 'updated');
+    }
     return data;
 }

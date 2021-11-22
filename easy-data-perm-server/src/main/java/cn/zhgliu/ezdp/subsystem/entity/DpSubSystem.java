@@ -2,10 +2,12 @@ package cn.zhgliu.ezdp.subsystem.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -13,10 +15,11 @@ import lombok.EqualsAndHashCode;
  * </p>
  *
  * @author zhgliu
- * @since 2021-08-05
+ * @since 2021-11-22
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
 public class DpSubSystem implements Serializable {
 
     private static final long serialVersionUID = 1L;

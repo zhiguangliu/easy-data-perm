@@ -10,24 +10,13 @@
 
     <script type="text/javascript" src="../../libs/easyui/jquery.min.js"></script>
     <script type="text/javascript" src="../../libs/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="../../libs/easyui/datagrid-cellediting.js"></script>
-    <script type="text/javascript" src="../../libs/easyui/common-toolbar.js"></script>
     <script type="text/javascript" src="../../libs/common.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.edatagrid.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
 
 </head>
 <body>
-<h2>Row Editing in DataGrid</h2>
-<p>Click the row to start editing.</p>
-<div style="margin:20px 0;"></div>
-
-<table id="DpSubSystemGrid" class="easyui-datagrid" title="Row Editing in DataGrid" style="width:700px;height:auto"
-       data-options="
-                iconCls: 'icon-edit',
-                singleSelect: true,
-                toolbar: '#tb',
-                url: 'http://localhost:8899/ezdp/rest/DpSubSystem/all',
-                method: 'get'
-            ">
+<table id="DpSubSystemGrid" class="easyui-datagrid" title="子系统维护" style="width:700px;height:auto">
     <thead>
     <tr>
         <th data-options="field:'id',width:80">ID</th>
@@ -45,12 +34,12 @@
     </thead>
 </table>
 
-<div id="tb" style="height:auto">
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append('DpSubSystemGrid')">Append</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeit('DpSubSystemGrid')">Remove</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptit('DpSubSystemGrid',SubSystem.saveData)">Accept</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpSubSystemGrid')">Reject</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>
+<div id="tb" style="height:35px;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="appendItem('DpSubSystemGrid')">增加</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeItem('DpSubSystemGrid')">删除</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptItems('DpSubSystemGrid',SubSystem.saveData)">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpSubSystemGrid')">还原</a>
+<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>-->
 </div>
 
 <script type="text/javascript" src="subsystem.js"></script>

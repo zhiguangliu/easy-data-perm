@@ -1,8 +1,15 @@
 $(function () {
-    $('#DpSubSystemGrid').datagrid('enableCellEditing');
+    $('#DpSubSystemGrid').edatagrid({
+        url: SubSystem.allUrl,
+        singleSelect: true,
+        toolbar: '#tb',
+        method: 'get'
+    });
+
 });
 
 SubSystem = {};
+SubSystem.allUrl = contextPath + "/rest/DpSubSystem/all";
 SubSystem.dataUrl = contextPath + "/rest/DpSubSystem/data";
 
 
