@@ -1,6 +1,12 @@
 $(function () {
     $('#DpPermissionMetaDataGrid').edatagrid({
-        url: DpPermissionMetadata.pageUrl
+        url: DpPermissionMetadata.pageUrl,
+        method: 'get',
+        singleSelect: true,
+        toolbar: '#tbPerm',
+        pagination:true,
+        fit:true,
+        onSelect:function(){console.log(1)},
     });
 });
 
