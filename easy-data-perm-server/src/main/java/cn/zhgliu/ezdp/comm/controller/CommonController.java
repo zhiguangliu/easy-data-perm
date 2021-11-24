@@ -15,9 +15,10 @@ import java.util.List;
 /**
  * @author zhgliu
  */
+@RestController
 public abstract class CommonController<T> {
 
-    IService<T> iService;
+    protected IService<T> iService;
 
     public CommonController(IService<T> iService) {
         this.iService = iService;
@@ -28,6 +29,14 @@ public abstract class CommonController<T> {
         List<T> list = iService.list(null);
         return list;
     }
+
+
+    @GetMapping("/list")
+    public List<T> find(T param) {
+        List<T> ret = iService.list(new QueryWrapper<>(param));
+        return ret;
+    }
+
 
     protected QueryWrapper<T> createCondition(T t) {
         QueryWrapper<T> wrapper = new QueryWrapper<T>();

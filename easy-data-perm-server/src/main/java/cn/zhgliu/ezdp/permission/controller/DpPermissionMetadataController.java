@@ -2,6 +2,7 @@ package cn.zhgliu.ezdp.permission.controller;
 
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
+import cn.zhgliu.ezdp.easyui.Pagination;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -30,6 +31,9 @@ public class DpPermissionMetadataController extends CommonController<DpPermissio
     @Override
     protected QueryWrapper<DpPermissionMetadata> createCondition(DpPermissionMetadata dpPermissionMetadata) {
         QueryWrapper<DpPermissionMetadata> wrapper = new QueryWrapper<DpPermissionMetadata>();
+        if (StringUtils.isNotEmpty(dpPermissionMetadata.getSubSystemCode())) {
+            wrapper = wrapper.eq("sub_system_code", dpPermissionMetadata.getSubSystemCode());
+        }
         if (StringUtils.isNotEmpty(dpPermissionMetadata.getOperationIdentifier())) {
             wrapper = wrapper.like("operation_identifier", dpPermissionMetadata.getOperationIdentifier());
         }
@@ -39,4 +43,11 @@ public class DpPermissionMetadataController extends CommonController<DpPermissio
         return wrapper;
     }
 
+    @Override
+    public Pagination<DpPermissionMetadata> page(Integer page, Integer rows, DpPermissionMetadata dpPermissionMetadata) {
+        if (dpPermissionMetadata.getSubSystemCode() == null) {
+            return new Pagination<>();
+        }
+        return super.page(page, rows, dpPermissionMetadata);
+    }
 }
