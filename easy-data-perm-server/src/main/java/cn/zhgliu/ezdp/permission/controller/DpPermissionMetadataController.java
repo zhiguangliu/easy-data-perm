@@ -4,8 +4,11 @@ package cn.zhgliu.ezdp.permission.controller;
 import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -15,8 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author zhgliu
  * @since 2021-08-05
  */
+@RestController
 @RequestMapping({"/permission/dp-permission-metadata","/rest/permission/dp-permission-metadata"})
+@Slf4j
 public class DpPermissionMetadataController extends CommonController<DpPermissionMetadata> {
+
+    public DpPermissionMetadataController(IService<DpPermissionMetadata> iService) {
+        super(iService);
+    }
 
     @Override
     protected QueryWrapper<DpPermissionMetadata> createCondition(DpPermissionMetadata dpPermissionMetadata) {

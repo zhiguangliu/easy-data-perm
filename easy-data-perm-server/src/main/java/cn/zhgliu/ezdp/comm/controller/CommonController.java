@@ -10,14 +10,18 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@RestController
-public class CommonController<T> {
+/**
+ * @author zhgliu
+ */
+public abstract class CommonController<T> {
 
-    @Resource
     IService<T> iService;
+
+    public CommonController(IService<T> iService) {
+        this.iService = iService;
+    }
 
     @GetMapping("/all")
     public List<T> all() {

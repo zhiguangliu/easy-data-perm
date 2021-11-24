@@ -1,18 +1,12 @@
 package cn.zhgliu.ezdp.subsystem.controller;
 
 
-import cn.hutool.json.JSONUtil;
-import cn.zhgliu.ezdp.comm.CommonWebResult;
+import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.subsystem.entity.DpSubSystem;
-import cn.zhgliu.ezdp.subsystem.service.IDpSubSystemService;
-import cn.zhgliu.ezdp.web.BatchData;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -25,38 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping({"/DpSubSystem", "/rest/DpSubSystem"})
 @Slf4j
-public class DpSubSystemController {
+public class DpSubSystemController extends CommonController<DpSubSystem> {
 
-    @Resource
-    IDpSubSystemService iDpSubSystemService;
-
-    @GetMapping("/all")
-    public List<DpSubSystem> all() {
-        List<DpSubSystem> list = iDpSubSystemService.list(null);
-        return list;
+    public DpSubSystemController(IService<DpSubSystem> iService) {
+        super(iService);
     }
-
-    @PostMapping("/data")
-    @Transactional(rollbackFor = Exception.class)
-    public CommonWebResult data(@RequestBody BatchData<DpSubSystem> data) {
-        log.debug(JSONUtil.toJsonStr(data));
-        if (data.getDel() != null && !data.getDel().isEmpty()) {
-            data.getDel().stream().forEach(item -> {
-                iDpSubSystemService.remove(new QueryWrapper<>(item));
-            });
-        }
-        if (data.getEdit() != null && !data.getEdit().isEmpty()) {
-            data.getEdit().stream().forEach(item -> {
-                iDpSubSystemService.updateById(item);
-            });
-        }
-        if (data.getAdd() != null && !data.getAdd().isEmpty()) {
-            data.getAdd().stream().forEach(item -> {
-                iDpSubSystemService.save(item);
-            });
-        }
-        return CommonWebResult.success();
-    }
-
-
 }
