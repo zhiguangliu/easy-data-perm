@@ -45,7 +45,41 @@
     </table>
 </div>
 <div data-options="region:'center',split:true" style="width:400px;">
-    <table id="DpPermissionItemMetaDataGrid" class="easyui-datagrid" title="操作项元数据"
+    <table id="DpPermissionGrid" class="easyui-datagrid" title="数据权限"
+           style="width:700px;height:auto">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:50">ID</th>
+            <th data-options="field:'targetTableName',width:200,align:'right',editor:'textbox'">表名</th>
+            <th data-options="field:'fieldName',width:200,align:'right',editor:'textbox'">字段名</th>
+            <th data-options="field:'fieldDesc',width:200,align:'right',editor:'textbox'">字段描述</th>
+            <th data-options="field:'fieldType',width:200,align:'right',
+                            editor:{
+                                type:'combobox',
+                                options:{
+                                    data:[{'text':'数字',value:'NUMBER'},{'text':'字符',value:'STRING'}]
+                                }
+                            }">字段类型
+            </th>
+        </tr>
+        </thead>
+    </table>
+
+    <div id="DpPermissionTb" style="height:auto">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+           onclick="appendItem('DpPermissionItemMetaDataGrid')">Append</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+           onclick="removeItem('DpPermissionItemMetaDataGrid')">Remove</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
+           onclick="acceptItems('DpPermissionItemMetaDataGrid',DpPermissionItemMetadata.saveData)">Accept</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
+           onclick="removeItem('DpPermissionItemMetaDataGrid')">Reject</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+           onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>
+    </div>
+</div>
+<div data-options="region:'east',split:true" style="width:400px;">
+    <table id="DpPermissionItemGrid" class="easyui-datagrid" title="操作项"
            style="width:700px;height:auto">
         <thead>
         <tr>
@@ -66,10 +100,6 @@
     </table>
 
     <div id="tbItem" style="height:auto">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
-           onclick="appendItem('DpPermissionItemMetaDataGrid')">Append</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
-           onclick="removeItem('DpPermissionItemMetaDataGrid')">Remove</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
            onclick="acceptItems('DpPermissionItemMetaDataGrid',DpPermissionItemMetadata.saveData)">Accept</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"

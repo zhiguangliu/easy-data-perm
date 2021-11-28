@@ -15,7 +15,18 @@ $(function () {
 
         }
     });
-    $('#DpPermissionItemMetaDataGrid').edatagrid({
+    $('#DpPermissionGrid').edatagrid({
+        url: DpPermissionItemMetadata.listUrl,
+        method: 'get',
+        singleSelect: true,
+        toolbar: '#DpPermissionTb',
+        pagination: true,
+        fit: true,
+        onSelect: function (index, row) {
+            console.log(1)
+        },
+    });
+    $('#DpPermissionItemGrid').edatagrid({
         url: DpPermissionItemMetadata.listUrl,
         method: 'get',
         singleSelect: true,
