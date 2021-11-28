@@ -3,7 +3,6 @@ package cn.zhgliu.ezdp.permission.controller;
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionItemMetadata;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +27,13 @@ public class DpPermissionItemMetadataController extends CommonController<DpPermi
         super(iService);
     }
 
+    @Override
     @GetMapping("/list")
-    public List<DpPermissionItemMetadata> find(DpPermissionItemMetadata param) {
+    public List<DpPermissionItemMetadata> find(DpPermissionItemMetadata param, Boolean isAsc, String... column) {
         if (param.getPermissionMetadataId() == null) {
             return new LinkedList<>();
         }
-        List<DpPermissionItemMetadata> ret = iService.list(new QueryWrapper<>(param).orderByAsc("target_table_name","field_name"));
+        List<DpPermissionItemMetadata> ret = super.find(param, true, "target_table_name", "field_name");
         return ret;
     }
 }

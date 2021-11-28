@@ -1,9 +1,11 @@
 package cn.zhgliu.ezdp.permission.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import cn.zhgliu.ezdp.comm.controller.CommonController;
+import cn.zhgliu.ezdp.permission.entity.DpPermission;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * <p>
@@ -15,6 +17,10 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @RequestMapping("/permission/dp-permission")
-public class DpPermissionController {
+public class DpPermissionController extends CommonController<DpPermission> {
 
+
+    public DpPermissionController(IService<DpPermission> iService) {
+        super(iService);
+    }
 }

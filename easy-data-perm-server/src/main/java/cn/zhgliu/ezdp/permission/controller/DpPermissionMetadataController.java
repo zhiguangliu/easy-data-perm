@@ -29,7 +29,7 @@ public class DpPermissionMetadataController extends CommonController<DpPermissio
     }
 
     @Override
-    protected QueryWrapper<DpPermissionMetadata> createCondition(DpPermissionMetadata dpPermissionMetadata) {
+    protected QueryWrapper<DpPermissionMetadata> createCondition(DpPermissionMetadata dpPermissionMetadata, Boolean isAsc, String... column) {
         QueryWrapper<DpPermissionMetadata> wrapper = new QueryWrapper<DpPermissionMetadata>();
         if (StringUtils.isNotEmpty(dpPermissionMetadata.getSubSystemCode())) {
             wrapper = wrapper.eq("sub_system_code", dpPermissionMetadata.getSubSystemCode());
@@ -44,10 +44,10 @@ public class DpPermissionMetadataController extends CommonController<DpPermissio
     }
 
     @Override
-    public Pagination<DpPermissionMetadata> page(Integer page, Integer rows, DpPermissionMetadata dpPermissionMetadata) {
-        if (dpPermissionMetadata.getSubSystemCode() == null) {
+    public Pagination<DpPermissionMetadata> page(Integer page, Integer rows, DpPermissionMetadata param, Boolean isAsc, String... column) {
+        if (param.getSubSystemCode() == null) {
             return new Pagination<>();
         }
-        return super.page(page, rows, dpPermissionMetadata);
+        return super.page(page, rows, param,isAsc,column);
     }
 }

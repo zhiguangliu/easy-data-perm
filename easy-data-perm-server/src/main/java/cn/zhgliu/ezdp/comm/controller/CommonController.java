@@ -25,29 +25,40 @@ public abstract class CommonController<T> {
     }
 
     @GetMapping("/all")
-    public List<T> all() {
-        List<T> list = iService.list(null);
+    public List<T> all(Boolean isAsc, String... column) {
+        QueryWrapper<T> wrapper = new QueryWrapper<>();
+        if (column != null) {
+            wrapper.orderBy(true, (isAsc != null ? isAsc : true), column);
+        }
+        List<T> list = iService.list(wrapper);
         return list;
     }
 
 
     @GetMapping("/list")
-    public List<T> find(T param) {
-        List<T> ret = iService.list(new QueryWrapper<>(param));
+    public List<T> find(T param, Boolean isAsc, String... column) {
+        QueryWrapper<T> tQueryWrapper = new QueryWrapper<>(param);
+        if (column != null) {
+            tQueryWrapper.orderBy(true, (isAsc != null ? isAsc : true), column);
+        }
+        List<T> ret = iService.list(tQueryWrapper);
         return ret;
     }
 
 
-    protected QueryWrapper<T> createCondition(T t) {
+    protected QueryWrapper<T> createCondition(T t, Boolean isAsc, String... column) {
         QueryWrapper<T> wrapper = new QueryWrapper<T>();
+        if (column != null) {
+            wrapper.orderBy(true, (isAsc != null ? isAsc : true), column);
+        }
         return wrapper;
     }
 
     @GetMapping("/page")
     @ResponseBody
-    public Pagination<T> page(Integer page, Integer rows, T t) {
+    public Pagination<T> page(Integer page, Integer rows, T param, Boolean isAsc, String... column) {
         IPage qPage = new Page(page, rows);
-        IPage iPage = iService.page(qPage, createCondition(t));
+        IPage iPage = iService.page(qPage, createCondition(param, isAsc, column));
         Pagination result = new Pagination(iPage.getCurrent(), iPage.getSize(), iPage.getRecords());
         return result;
     }
