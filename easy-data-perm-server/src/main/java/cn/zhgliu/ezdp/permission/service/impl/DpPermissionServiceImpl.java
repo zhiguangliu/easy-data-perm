@@ -1,14 +1,21 @@
 package cn.zhgliu.ezdp.permission.service.impl;
 
 import cn.zhgliu.ezdp.permission.entity.DpPermission;
+import cn.zhgliu.ezdp.permission.entity.DpPermissionItemMetadata;
 import cn.zhgliu.ezdp.permission.mapper.DpPermissionMapper;
+import cn.zhgliu.ezdp.permission.service.IDpPermissionItemMetadataService;
+import cn.zhgliu.ezdp.permission.service.IDpPermissionMetadataService;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author zhgliu
@@ -17,4 +24,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class DpPermissionServiceImpl extends ServiceImpl<DpPermissionMapper, DpPermission> implements IDpPermissionService {
 
+//    LoggerFactory.getlogger(DpPermissionServiceImpl.class);
+
+
+    @Resource
+    IDpPermissionItemMetadataService itemMetadataService;
+
+    @Resource
+    IDpPermissionMetadataService metadataService;
+
+    @Override
+    public DpPermission addPermission(DpPermission dpPermission) {
+        Integer metadataId = dpPermission.getMetadataId();
+
+        DpPermission toInsertPermission = new DpPermission();
+        toInsertPermission.setMetadataId(metadataId);
+        toInsertPermission.setStatus("OK");
+        toInsertPermission.setPermissionName("加个序号");
+        this.baseMapper.insert(toInsertPermission);
+
+        DpPermissionItemMetadata param = new DpPermissionItemMetadata();
+        param.setPermissionMetadataId(metadataId);
+        List<DpPermissionItemMetadata> list = itemMetadataService.list(new QueryWrapper<>(param));
+
+        System.out.println("===========================");
+        System.out.println(toInsertPermission.getId());
+        System.out.println("===========================");
+
+        return null;
+    }
 }
