@@ -43,11 +43,6 @@ DpPermissionMetadata = {};
 DpPermissionMetadata.pageUrl = contextPath + "/rest/permission/dp-permission-metadata/page";
 DpPermissionMetadata.dataUrl = contextPath + "/rest/permission/dp-permission-metadata/data";
 
-DpPermissionItemMetadata = {};
-DpPermissionItemMetadata.listUrl = contextPath + "/rest/permission/dp-permission-item-metadata/list";
-DpPermissionItemMetadata.dataUrl = contextPath + "/rest/permission/dp-permission-item-metadata/data";
-
-
 // http://localhost:8899/ezdp//rest/permission/dp-permission-metadata/page?pageNum=1&pageSize=10&operationName=aa
 DpPermissionMetadata.load = function () {
     param = {};
@@ -58,6 +53,33 @@ DpPermissionMetadata.load = function () {
     $('#DpPermissionMetaDataGrid').datagrid('reload', param);
 
 };
+
+
+
+DpPermission = {};
+DpPermissionMetadata.createUrl = contextPath + "/rest/permission/dp-permission/permission/{metadataId}";
+
+DpPermission.createPermission = function () {
+
+    $.ajax({
+        type: "POST",
+        url: DpPermissionMetadata.dataUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (result) {
+            alert("操作成功");
+            console.log(JSON.stringify(result));
+            $('#DpPermissionMetaDataGrid').datagrid('reload');
+        }
+    });
+};
+
+
+DpPermissionItem = {};
+DpPermissionItemMetadata.listUrl = contextPath + "/rest/permission/dp-permission-item-metadata/list";
+DpPermissionItemMetadata.dataUrl = contextPath + "/rest/permission/dp-permission-item-metadata/data";
+
+
 DpPermissionMetadata.saveData = function (data) {
     for (const item of data.add) {
         item.subSystemCode = $("#subSystemCode").textbox("getValue");

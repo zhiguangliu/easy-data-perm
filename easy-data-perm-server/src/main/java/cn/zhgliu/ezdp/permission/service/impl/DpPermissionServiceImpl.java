@@ -44,11 +44,9 @@ public class DpPermissionServiceImpl extends ServiceImpl<DpPermissionMapper, DpP
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DpPermission addPermission(DpPermission dpPermission) {
-        Integer metadataId = dpPermission.getMetadataId();
+    public DpPermission addPermission(Integer metadataId) {
 
         DpPermissionMetadata currentMeta = metadataService.getById(metadataId);
-
 
         DpPermission toInsertPermission = new DpPermission();
         toInsertPermission.setMetadataId(metadataId);

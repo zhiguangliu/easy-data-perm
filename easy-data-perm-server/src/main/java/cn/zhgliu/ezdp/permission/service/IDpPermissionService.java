@@ -13,6 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDpPermissionService extends IService<DpPermission> {
 
-    DpPermission addPermission(DpPermission dpPermission);
+    DpPermission addPermission(Integer dpPermission);
 
 }
