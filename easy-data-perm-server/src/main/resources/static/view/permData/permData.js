@@ -8,7 +8,7 @@ $(function () {
         fit: true,
         onSelect: function (index, row) {
             DpPermissionMetadata.id = row.id;
-            $('#DpPermissionItemMetaDataGrid').edatagrid("reload", {'permissionMetadataId': row.id});
+            $('#DpPermissionGrid').edatagrid("reload", {'metadataId': row.id});
         },
         onLoadSuccess: function (data) {
             $('#DpPermissionItemMetaDataGrid').edatagrid("loadData", []);
@@ -16,26 +16,24 @@ $(function () {
         }
     });
     $('#DpPermissionGrid').edatagrid({
-        url: DpPermissionItemMetadata.listUrl,
+        url: DpPermission.listUrl,
         method: 'get',
         singleSelect: true,
         toolbar: '#DpPermissionTb',
-        pagination: true,
+        pagination: false,
         fit: true,
         onSelect: function (index, row) {
-            console.log(1)
+            console.log(row.id);
+            $('#DpPermissionItemGrid').edatagrid("reload", {'permissionId': row.id});
         },
     });
     $('#DpPermissionItemGrid').edatagrid({
-        url: DpPermissionItemMetadata.listUrl,
+        url: DpPermissionItem.listUrl,
         method: 'get',
         singleSelect: true,
         toolbar: '#tbItem',
         pagination: true,
         fit: true,
-        onSelect: function (index, row) {
-            console.log(1)
-        },
     });
 });
 
@@ -57,15 +55,21 @@ DpPermissionMetadata.load = function () {
 
 
 DpPermission = {};
-DpPermissionMetadata.createUrl = contextPath + "/rest/permission/dp-permission/permission/{metadataId}";
+DpPermission.createUrl = contextPath + "/rest/permission/dp-permission/permission/{metadataId}";
+DpPermission.listUrl = contextPath + "/rest/permission/dp-permission/list";
+DpPermission.dataUrl = contextPath + "/rest/permission/dp-permission/data";
 
 DpPermission.createPermission = function () {
-
+    let row = $('#DpPermissionMetaDataGrid').datagrid("getSelected");
+    if (!row) {
+        alert("请先选择权限组元数据。")
+    }
+    let url = DpPermission.createUrl.replace("{metadataId}", row.id);
     $.ajax({
         type: "POST",
-        url: DpPermissionMetadata.dataUrl,
+        url: url,
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(data),
+        // data: JSON.stringify(data),
         success: function (result) {
             alert("操作成功");
             console.log(JSON.stringify(result));
@@ -74,13 +78,26 @@ DpPermission.createPermission = function () {
     });
 };
 
+DpPermission.saveData = function (data) {
+    $.ajax({
+        type: "POST",
+        url: DpPermission.dataUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (result) {
+            alert("操作成功");
+            console.log(JSON.stringify(result));
+            $('#DpPermissionItemMetaDataGrid').datagrid('reload');
+        }
+    });
+};
 
 DpPermissionItem = {};
-DpPermissionItemMetadata.listUrl = contextPath + "/rest/permission/dp-permission-item-metadata/list";
-DpPermissionItemMetadata.dataUrl = contextPath + "/rest/permission/dp-permission-item-metadata/data";
+DpPermissionItem.listUrl = contextPath + "/rest/permission/dp-permission-item/list";
+DpPermissionItem.dataUrl = contextPath + "/rest/permission/dp-permission-item/data";
 
 
-DpPermissionMetadata.saveData = function (data) {
+DpPermissionItem.saveData = function (data) {
     for (const item of data.add) {
         item.subSystemCode = $("#subSystemCode").textbox("getValue");
     }
@@ -98,21 +115,4 @@ DpPermissionMetadata.saveData = function (data) {
     });
 };
 
-DpPermissionItemMetadata.saveData = function (data) {
-    for (const item of data.add) {
-        item.permissionMetadataId = DpPermissionMetadata.id;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: DpPermissionItemMetadata.dataUrl,
-        contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(data),
-        success: function (result) {
-            alert("操作成功");
-            console.log(JSON.stringify(result));
-            $('#DpPermissionItemMetaDataGrid').datagrid('reload');
-        }
-    });
-};
 

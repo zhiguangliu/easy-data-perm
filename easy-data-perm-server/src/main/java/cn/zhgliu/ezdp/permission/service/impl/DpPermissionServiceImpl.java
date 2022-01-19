@@ -1,5 +1,6 @@
 package cn.zhgliu.ezdp.permission.service.impl;
 
+import cn.zhgliu.ezdp.consts.Relation;
 import cn.zhgliu.ezdp.permission.entity.DpPermission;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionItem;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionItemMetadata;
@@ -62,7 +63,8 @@ public class DpPermissionServiceImpl extends ServiceImpl<DpPermissionMapper, DpP
             DpPermissionItem item = new DpPermissionItem();
             BeanUtils.copyProperties(itemMetaData, item);
             item.setPermissionId(toInsertPermission.getId());
-            item.setMetadataId(metadataId);
+            item.setItemMetadataId(itemMetaData.getId());
+            item.setRelation(Relation.NOT_CONTROL.toString());
             itemService.save(item);
         });
 

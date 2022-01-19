@@ -3,8 +3,6 @@ package cn.zhgliu.ezdp.permission.controller;
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.permission.entity.DpPermission;
-import cn.zhgliu.ezdp.permission.service.IDpPermissionItemMetadataService;
-import cn.zhgliu.ezdp.permission.service.IDpPermissionMetadataService;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionService;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Controller;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>
@@ -29,12 +29,6 @@ public class DpPermissionController extends CommonController<DpPermission> {
     @Resource
     IDpPermissionService iDpPermissionService;
 
-    @Resource
-    IDpPermissionMetadataService iDpPermissionMetadataService;
-
-    @Resource
-    IDpPermissionItemMetadataService iDpPermissionItemMetadataService;
-
     public DpPermissionController(IService<DpPermission> iService) {
         super(iService);
     }
@@ -46,4 +40,11 @@ public class DpPermissionController extends CommonController<DpPermission> {
         return ret;
     }
 
+    @Override
+    public List<DpPermission> find(DpPermission param, Boolean isAsc, String... column) {
+        if (param.getMetadataId() == null) {
+            return new LinkedList<>();
+        }
+        return super.find(param, isAsc, column);
+    }
 }
