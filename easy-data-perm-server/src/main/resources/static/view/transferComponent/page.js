@@ -1,5 +1,4 @@
 $(function () {
-
     $('#left-list').datalist({
         url: transfer.leftDataUrl,
         title: "LEFT",
@@ -35,12 +34,10 @@ transfer.switch = function (direction) {
         selected = $('#right-list').datalist("getSelections");
     }
     if (selected) {
-        for (let i in selected) {
-            param.push(selected[i].id);
-        }
+        for (let i in selected) {param.push(selected[i].id);}
     }
-
     console.log(JSON.stringify(param));
+
     if (param.length > 0) {
         $.ajax({
             type: "POST",
