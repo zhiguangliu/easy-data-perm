@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author zhgliu
- * @since 2021-10-29
+ * @since 2022-01-09
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -31,21 +31,13 @@ public class DpPermissionItem implements Serializable {
 
     private Integer permissionId;
 
-    private Integer metadataId;
+    private Integer itemMetadataId;
 
     private String relation;
 
     private String valueType;
 
     private String fieldValue;
-
-    private String applyMethod;
-
-    private String targetTableName;
-
-    private String fieldName;
-
-    private String fieldType;
 
     private String memo;
 

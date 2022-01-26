@@ -23,7 +23,7 @@
 <div data-options="region:'west'" style="width: 800px;">
     <form id="tbPerm" style="padding: 5px;height:70px;">
         <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:200px"
-                data-options="url:'../../rest/DpSubSystem/all',valueField:'subSystemCode',textField:'subSystemName',method:'GET'"></input>
+                data-options="url:'../../rest/DpSubSystem/all',valueField:'subSystemCode',textField:'subSystemName',method:'GET',onChange:DpPermissionMetadata.load"></input>
         <input class="easyui-textbox" type="text" id="operationName" name="operationName"
                data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作名称',label:'操作名称'"/>
         <input class="easyui-textbox" type="text" id="operationIdentifier" name="operationIdentifier"
@@ -45,40 +45,33 @@
     </table>
 </div>
 <div data-options="region:'center',split:true" style="width:400px;">
-    <table id="DpPermissionGrid" class="easyui-datagrid" title="数据权限"
-           style="width:700px;height:auto">
-        <thead>
-        <tr>
-            <th data-options="field:'id',width:50">ID</th>
-            <th data-options="field:'targetTableName',width:200,align:'right',editor:'textbox'">表名</th>
-            <th data-options="field:'fieldName',width:200,align:'right',editor:'textbox'">字段名</th>
-            <th data-options="field:'fieldDesc',width:200,align:'right',editor:'textbox'">字段描述</th>
-            <th data-options="field:'fieldType',width:200,align:'right',
-                            editor:{
-                                type:'combobox',
-                                options:{
-                                    data:[{'text':'数字',value:'NUMBER'},{'text':'字符',value:'STRING'}]
-                                }
-                            }">字段类型
-            </th>
-        </tr>
-        </thead>
-    </table>
 
     <div id="DpPermissionTb" style="height:auto">
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
            onclick="DpPermission.createPermission()">Append</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
-           onclick="removeItem('DpPermissionItemMetaDataGrid')">Remove</a>
+           onclick="removeItem('DpPermissionGrid')">Remove</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
-           onclick="acceptItems('DpPermissionItemMetaDataGrid',DpPermissionItemMetadata.saveData)">Accept</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
-           onclick="removeItem('DpPermissionItemMetaDataGrid')">Reject</a>
+           onclick="acceptItems('DpPermissionGrid',DpPermission.saveData)">Accept</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
-           onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>
+           onclick="console.log(JSON.stringify(getChanges('DpPermissionGrid')));">GetChanges</a>
     </div>
+
+    <table id="DpPermissionGrid" class="easyui-datagrid" title="数据权限"
+           style="width:700px;height:auto">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:50">ID</th>
+            <th data-options="field:'permissionName',width:300,align:'right',
+                            editor:{
+                                type:'textbox'
+                            }">权限名称
+            </th>
+        </tr>
+        </thead>
+    </table>
 </div>
-<div data-options="region:'east',split:true" style="width:400px;">
+<div data-options="region:'east',split:true" style="width:800px;">
     <table id="DpPermissionItemGrid" class="easyui-datagrid" title="操作项"
            style="width:700px;height:auto">
         <thead>
