@@ -1,51 +1,61 @@
 $(function () {
-    $('#left-list').datalist({
-        url: transfer.leftDataUrl,
-        title: "LEFT",
-        method: "GET",
-        checkbox: true,
-        fit: true,
-        singleSelect: false,
-    });
-
-    $('#right-list').datalist({
-        url: transfer.rightDataUrl,
-        title: "RIGHT",
-        method: "GET",
-        checkbox: true,
-        fit: true,
-        singleSelect: false,
-    });
+    transfer.init();
 });
 
 transfer = {
-    leftDataUrl: "data.json",
-    rightDataUrl: "data.json",
-    toLeftUrl: "",
-    toRightUrl: "",
+    left: {
+        id: "left-list",
+        dataUrl: "data.json",
+        title: "LEFT",
+        switchUrl: "",
+    },
+    right: {
+        id: "right-list",
+        dataUrl: "data.json",
+        title: "RIGHT",
+        switchUrl: "",
+    },
 };
 
+transfer.init = function () {
+    for (var x in transfer) {
+        this.initOneList(transfer[x]);
+    }
+};
+
+transfer.initOneList = function (options) {
+    $('#' + options.id).datalist({
+        url: options.dataUrl,
+        title: options.title,
+        method: "GET",
+        checkbox: true,
+        fit: true,
+        singleSelect: false,
+    });
+}
+
 transfer.switch = function (direction) {
+    let config = transfer[direction];
     let param = [];
-    let selected;
-    if (direction == "toRight") {
-        selected = $('#left-list').datalist("getSelections");
-    } else {
-        selected = $('#right-list').datalist("getSelections");
-    }
+    let selected = $('#' + config.id).datalist("getSelections");
+
     if (selected) {
-        for (let i in selected) {param.push(selected[i].id);}
+        for (let i in selected) {
+            param.push(selected[i].id);
+        }
     }
-    console.log(JSON.stringify(param));
 
     if (param.length > 0) {
         $.ajax({
             type: "POST",
-            url: direction == "toRight" ? transfer.toRightUrl : transfer.toLeftUrl,
+            url: config.switchUrl,
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify(param),
             success: function (result) {
-                console.log(result);
+                transfer.init();
+            },
+            error: function (result) {
+                transfer.init();
             }
         });
     }
