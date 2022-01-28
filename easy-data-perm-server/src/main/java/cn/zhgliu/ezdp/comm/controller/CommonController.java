@@ -47,7 +47,7 @@ public abstract class CommonController<T> {
 
 
     protected QueryWrapper<T> createCondition(T t, Boolean isAsc, String... column) {
-        QueryWrapper<T> wrapper = new QueryWrapper<T>();
+        QueryWrapper<T> wrapper = new QueryWrapper<T>(t);
         if (column != null) {
             wrapper.orderBy(true, (isAsc != null ? isAsc : true), column);
         }
