@@ -23,17 +23,18 @@ $(function () {
         pagination: false,
         fit: true,
         onSelect: function (index, row) {
-            console.log(row.id);
+            DpPermissionItem.editIndex = undefined
             $('#DpPermissionItemGrid').edatagrid("reload", {'permissionId': row.id});
         },
     });
-    $('#DpPermissionItemGrid').edatagrid({
+    $('#DpPermissionItemGrid').datagrid({
         url: DpPermissionItem.listUrl,
         method: 'get',
         singleSelect: true,
         toolbar: '#tbItem',
         pagination: true,
         fit: true,
+        onClickCell: DpPermissionItem.ecDpDataRoleGroupListEditRow,
     });
 });
 
@@ -44,14 +45,17 @@ DpPermissionMetadata.dataUrl = contextPath + "/rest/permission/dp-permission-met
 // http://localhost:8899/ezdp//rest/permission/dp-permission-metadata/page?pageNum=1&pageSize=10&operationName=aa
 DpPermissionMetadata.load = function () {
     param = {};
-    if($("#subSystemCode").textbox("getValue")){param.subSystemCode=$("#subSystemCode").textbox("getValue")}
-    if($("#operationName").textbox("getValue")){param.operationName=$("#operationName").textbox("getValue")}
-    if($("#operationIdentifier").textbox("getValue")){param.operationIdentifier=$("#operationIdentifier").textbox("getValue")}
-
+    if ($("#subSystemCode").textbox("getValue")) {
+        param.subSystemCode = $("#subSystemCode").textbox("getValue")
+    }
+    if ($("#operationName").textbox("getValue")) {
+        param.operationName = $("#operationName").textbox("getValue")
+    }
+    if ($("#operationIdentifier").textbox("getValue")) {
+        param.operationIdentifier = $("#operationIdentifier").textbox("getValue")
+    }
     $('#DpPermissionMetaDataGrid').datagrid('reload', param);
-
 };
-
 
 
 DpPermission = {};
@@ -96,21 +100,63 @@ DpPermissionItem = {};
 DpPermissionItem.listUrl = contextPath + "/rest/permission/dp-permission-item/list";
 DpPermissionItem.dataUrl = contextPath + "/rest/permission/dp-permission-item/data";
 
+DpPermissionItem.endEditing = function () {
+    if (DpPermissionItem.editIndex != undefined) {
+        $('#DpPermissionItemGrid').datagrid("endEdit", DpPermissionItem.editIndex);
+        let rows = $('#DpPermissionItemGrid').datagrid("getRows");
+        rows[DpPermissionItem.editIndex].editStatus = "edit"
+        DpPermissionItem.editIndex = undefined
+    }
+    return true;
+};
+
+DpPermissionItem.ecDpDataRoleGroupListEditRow = function (index, field) {
+    if (DpPermissionItem.editIndex != index) {
+        if (DpPermissionItem.endEditing()) {
+            $('#DpPermissionItemGrid').datagrid('selectRow', index)
+                .datagrid('beginEdit', index);
+            let ed = $('#DpPermissionItemGrid').datagrid('getEditor', {index: index, field: field});
+            if (ed) {
+                ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+            }
+            DpPermissionItem.editIndex = index;
+        }
+    }
+};
+
+DpPermissionItem.changeValueType = function (record) {
+    let currentIndex = $('#DpPermissionItemGrid').datagrid("getRowIndex", $('#DpPermissionItemGrid').datagrid("getSelected"));
+    let ed = $('#DpPermissionItemGrid').datagrid('getEditors', currentIndex)[2];
+
+    let subsystemCode = $("#subSystemCode").val();
+    console.log(ed + "=====" + subsystemCode + "=====" + currentIndex);
+    if (ed) {
+        $(ed.target).combobox("reload", "/ezdp/rest/prop/dp-base-property-define/getPropNameList?valueType=" + record.value + "&subsystemCode=" + subsystemCode);
+    }
+};
 
 DpPermissionItem.saveData = function (data) {
-    for (const item of data.add) {
-        item.subSystemCode = $("#subSystemCode").textbox("getValue");
+    DpPermissionItem.endEditing();
+    let rows = $('#DpPermissionItemGrid').datagrid("getRows");
+
+    console.log(JSON.stringify(rows));
+    let param = [];
+    for (let i in rows) {
+        if (rows[i]["editStatus"] == "edit") {
+            param.push(rows[i]);
+        }
     }
+    let p = {"edit": param};
 
     $.ajax({
         type: "POST",
-        url: DpPermissionMetadata.dataUrl,
+        url: DpPermissionItem.dataUrl,
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify(data),
+        data: JSON.stringify(p),
         success: function (result) {
             alert("操作成功");
             console.log(JSON.stringify(result));
-            $('#DpPermissionMetaDataGrid').datagrid('reload');
+            $('#DpPermissionItemGrid').datagrid('reload');
         }
     });
 };
