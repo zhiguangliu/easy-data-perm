@@ -1,0 +1,15 @@
+[
+  {"id":1,"text":"Epson WorkForce 845","group":"Printer"},
+  {"id":2,"text":"Canon PIXMA MG5320","group":"Printer"},
+  {"id":3,"text":"HP Deskjet 1000 Printer","group":"Printer"},
+  {"id":4,"text":"Cisco RV110W-A-NA-K9","group":"Firewall"},
+  {"id":5,"text":"ZyXEL ZyWALL USG50","group":"Firewall"},
+  {"id":6,"text":"NETGEAR FVS318","group":"Firewall"},
+  {"id":7,"text":"Logitech Keyboard K120","group":"Keyboard"},
+  {"id":8,"text":"Microsoft Natural Ergonomic Keyboard 4000","group":"Keyboard"},
+  {"id":9,"text":"Logitech Wireless Touch Keyboard K400","group":"Keyboard"},
+  {"id":0,"text":"Logitech Gaming Keyboard G110","group":"Keyboard"},
+  {"id":11,"text":"Nikon COOLPIX L26 16.1 MP","group":"Camera"},
+  {"id":12,"text":"Canon PowerShot A1300","group":"Camera"},
+  {"id":13,"text":"Canon PowerShot A2300","group":"Camera"}
+]

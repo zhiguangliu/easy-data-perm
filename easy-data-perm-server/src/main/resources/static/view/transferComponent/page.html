@@ -14,25 +14,27 @@
 
 </head>
 <body>
+<div class="easyui-window" title="My Window" style="width:813px;height:600px"
+     data-options="minimizable:false,maximizable:false,collapsible:false,resizable:false">
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'east',collapsible:false,border:false" style="width:370px;">
+            <ul id="right-list"></ul>
+        </div>
 
-<div class="easyui-layout" style="width:800px;height:600px;">
-    <div data-options="region:'east',collapsible:false,border:false" style="width:370px;">
-        <ul id="right-list"></ul>
-    </div>
+        <div data-options="region:'west',collapsible:false,border:false" style="width:370px;">
+            <ul id="left-list"></ul>
+        </div>
 
-    <div data-options="region:'west',collapsible:false,border:false" style="width:370px;">
-        <ul id="left-list"></ul>
-    </div>
-
-    <div data-options="region:'center',border:false" style="padding:7px;background:#eee">
-        <div class="easyui-panel" style="background:#eee;padding-top: 100px;" data-options="border:false,">
+        <div data-options="region:'center',border:false" style="padding:7px;background:#eee">
+            <div class="easyui-panel" style="background:#eee;padding-top: 100px;" data-options="border:false,">
             <span class="easyui-linkbutton" data-options="size:'large',width:45"
                   onclick="transfer.switch('left')"> -> </span>
-            <br>
-            <br>
-            <br>
-            <span class="easyui-linkbutton" data-options="size:'large',width:45"
-                  onclick="transfer.switch('right')"> <- </span>
+                <br>
+                <br>
+                <br>
+                <span class="easyui-linkbutton" data-options="size:'large',width:45"
+                      onclick="transfer.switch('right')"> <- </span>
+            </div>
         </div>
     </div>
 </div>

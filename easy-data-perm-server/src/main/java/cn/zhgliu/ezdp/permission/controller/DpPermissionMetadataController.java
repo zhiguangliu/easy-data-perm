@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * <p>
  * 前端控制器
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2021-08-05
  */
 @RestController
-@RequestMapping({"/permission/dp-permission-metadata","/rest/permission/dp-permission-metadata"})
+@RequestMapping({"/permission/dp-permission-metadata", "/rest/permission/dp-permission-metadata"})
 @Slf4j
 public class DpPermissionMetadataController extends CommonController<DpPermissionMetadata> {
 
@@ -48,6 +51,24 @@ public class DpPermissionMetadataController extends CommonController<DpPermissio
         if (param.getSubSystemCode() == null) {
             return new Pagination<>();
         }
-        return super.page(page, rows, param,isAsc,column);
+        return super.page(page, rows, param, isAsc, column);
+    }
+
+    @Override
+    public List<DpPermissionMetadata> find(DpPermissionMetadata param, Boolean isAsc, String... column) {
+        if (StringUtils.isBlank(param.getSubSystemCode())) {
+            return new LinkedList<>();
+        }
+        QueryWrapper<DpPermissionMetadata> tQueryWrapper = new QueryWrapper<DpPermissionMetadata>();
+        tQueryWrapper.like("sub_system_code", param.getSubSystemCode());
+        if (StringUtils.isNotBlank(param.getOperationName())) {
+            tQueryWrapper.like("operation_name", param.getOperationName());
+        }
+
+        if (column != null) {
+            tQueryWrapper.orderBy(true, (isAsc != null ? isAsc : true), column);
+        }
+        List<DpPermissionMetadata> list = iService.list(tQueryWrapper);
+        return list;
     }
 }

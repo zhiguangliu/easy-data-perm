@@ -21,29 +21,29 @@
 </head>
 <body class="easyui-layout">
 <!--权限角色表格-->
-<div data-options="region:'west'" style="width: 800px;">
+<div data-options="region:'west',split:true" style="width: 500px;">
     <form id="tbPerm" style="padding: 5px;height:70px;">
-        <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:200px"
-                data-options="url:'../../rest/DpSubSystem/all?isAsc=true&column=id',valueField:'subSystemCode',textField:'subSystemName',method:'GET'"></input>
+        <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统"
+               data-options="width:150,labelWidth:50,url:'../../rest/DpSubSystem/all?isAsc=true&column=id',valueField:'subSystemCode',textField:'subSystemName',method:'GET',onChange:DpRole.load"></input>
         <input class="easyui-textbox" type="text" id="roleName" name="roleName"
-               data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'角色名称',label:'角色名称'"/>
+               data-options="width:240,labelWidth:70,labelAlign:'right',prompt:'角色名称',label:'角色名称'"/>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
            onclick="DpRole.load()">查找</a>
         <br>
 
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
-           onclick="appendItem('DpPermissionMetaDataGrid')">增加</a>
+           onclick="appendItem('DpRoleGrid')">增加</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
-           onclick="removeItem('DpPermissionMetaDataGrid')">Remove</a>
+           onclick="removeItem('DpRoleGrid')">Remove</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
-           onclick="acceptItems('DpPermissionMetaDataGrid',DpPermissionData.saveData)">Accept</a>
+           onclick="acceptItems('DpRoleGrid',DpRole.saveData)">Accept</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
-           onclick="reject('DpPermissionMetaDataGrid')">Reject</a>
+           onclick="reject('DpRoleGrid')">Reject</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
-           onclick="console.log(JSON.stringify(getChanges('DpPermissionMetaDataGrid')));">GetChanges</a>
+           onclick="console.log(JSON.stringify(getChanges('DpRoleGrid')));">GetChanges</a>
     </form>
 
-    <table id="DpRoleGrid" class="easyui-datagrid" title="角色" style="width:700px;height:auto">
+    <table id="DpRoleGrid" class="" title="角色" style="width:700px;height:auto">
         <thead>
         <tr>
             <th data-options="field:'id',width:50">ID</th>
@@ -53,33 +53,83 @@
     </table>
 </div>
 <!--权限组表格-->
-<div data-options="region:'center',split:true" style="width:400px;">
-    <table id="DpSelectedPermGrid" class="easyui-datagrid" title="已选权限组"
-           style="width:700px;height:auto">
-        <thead>
-        <tr>
-            <th data-options="field:'id',width:50">ID</th>
-            <th data-options="field:'targetTableName',width:200,align:'right',editor:'textbox'">表名</th>
-            <th data-options="field:'fieldName',width:200,align:'right',editor:'textbox'">字段名</th>
-            <th data-options="field:'fieldDesc',width:200,align:'right',editor:'textbox'">字段描述</th>
-            <th data-options="field:'fieldType',width:200,align:'right',
-                            editor:{
-                                type:'combobox',
-                                options:{
-                                    data:[{'text':'数字',value:'NUMBER'},{'text':'字符',value:'STRING'}]
-                                }
-                            }">字段类型
-            </th>
-        </tr>
-        </thead>
-    </table>
+<div data-options="region:'center',split:true">
+    <div class="easyui-layout" data-options="fit:true,border:false">
+        <div data-options="region:'west',split:true,border:false" style="width:400px;">
 
-    <div id="tbSelectedPerm" style="height:auto">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
-           onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
-           onclick="appendItem('DpPermissionItemMetaDataGrid')">编辑</a>
+            <table id="DpSelectedPermGrid" title="已选权限组">
+                <thead>
+                <tr>
+                    <th data-options="field:'id',width:50">ID</th>
+                    <th data-options="field:'operationName',width:200,align:'right',editor:'textbox'">操作名称</th>
+                    <th data-options="field:'permissionName',width:200,align:'right',editor:'textbox'">权限名称</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tbSelectedPerm" style="height:auto">
+<!--                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"-->
+<!--                   onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>-->
+                <button class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+                   onclick="DpRolePermissionWindow.openWindow()">编辑</button>
+            </div>
+        </div>
+        <div data-options="region:'center'">
+
+        </div>
     </div>
+</div>
+
+<div class="easyui-window" title="设置角色权限" style="width:1013px;height:600px" id="editRelationWindow"
+     data-options="minimizable:false,maximizable:false,collapsible:false,resizable:false,closed:true,modal:true">
+    <div class="easyui-layout" data-options="fit:true,border:false">
+        <div data-options="region:'west',border:false" style="width:250px;">
+            <div id="DpPermissionTb" style="height:auto">
+                <input class="easyui-textbox" type="text" id="operationName" name="operationName"
+                       data-options="width:190,labelWidth:0,labelAlign:'right',prompt:'操作名称',label:''"/>
+                <button class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+                   onclick="DpRolePermissionWindow.operationTableSearch()"></button>
+            </div>
+
+            <table id="DpPermissionGrid" class="easyui-datagrid" title="数据权限"
+                  data-options="toolbar:'#DpPermissionTb',fit:true">
+                <thead>
+                <tr>
+                    <th data-options="field:'id',width:40">ID</th>
+                    <th data-options="field:'operationName',width:200,align:'right'">操作名称</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div data-options="region:'center',border:false">
+
+            <div class="easyui-layout" data-options="fit:true">
+                <div data-options="region:'east',collapsible:false,border:false" style="width:270px;">
+                    <ul id="right-list"></ul>
+                </div>
+
+                <div data-options="region:'west',collapsible:false,border:false" style="width:270px;">
+                    <ul id="left-list"></ul>
+                </div>
+
+                <div data-options="region:'center',border:false" style="padding:7px;background:#eee">
+                    <div class="easyui-panel" style="background:#eee;padding-top: 100px;" data-options="border:false,">
+            <span class="easyui-linkbutton" data-options="size:'large',width:45"
+                  onclick="transfer.switch('left')"> -> </span>
+                        <br>
+                        <br>
+                        <br>
+                        <span class="easyui-linkbutton" data-options="size:'large',width:45"
+                              onclick="transfer.switch('right')"> <- </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-options="region:'east',border:false" style="width:150px;">
+
+        </div>
+    </div>
+
+
 </div>
 
 </body>
