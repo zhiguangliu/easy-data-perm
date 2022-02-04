@@ -1,8 +1,12 @@
 package cn.zhgliu.ezdp.prop.controller;
 
 
+import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.consts.ValueType;
+import cn.zhgliu.ezdp.easyui.Pagination;
 import cn.zhgliu.ezdp.prop.entity.DpBasePropertyDefine;
+import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -20,9 +24,13 @@ import java.util.List;
  * @since 2021-08-05
  */
 @Controller
-@RequestMapping({"/prop/dp-base-property-define","/rest/prop/dp-base-property-define"})
-public class DpBasePropertyDefineController {
+@RequestMapping({"/prop/dp-base-property-define", "/rest/prop/dp-base-property-define"})
+public class DpBasePropertyDefineController extends CommonController<DpBasePropertyDefine> {
 
+
+    public DpBasePropertyDefineController(IService<DpBasePropertyDefine> iService) {
+        super(iService);
+    }
 
     @RequestMapping("/getPropNameList")
     @ResponseBody
@@ -46,6 +54,15 @@ public class DpBasePropertyDefineController {
             return objects;
         } else {
             return new LinkedList();
+        }
+    }
+
+    @Override
+    public Pagination<DpBasePropertyDefine> page(Integer page, Integer rows, DpBasePropertyDefine param, Boolean isAsc, String... column) {
+        if (StringUtils.isEmpty(param.getSubSystemCode())) {
+            return new Pagination<>();
+        } else {
+            return super.page(page, rows, param, isAsc, column);
         }
     }
 

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>权限属性管理</title>
+
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/demo/demo.css">
+
+    <script type="text/javascript" src="../../libs/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/datagrid-cellediting.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.edatagrid.js"></script>
+    <script type="text/javascript" src="../../libs/common.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
+
+    <script type="text/javascript" src="permProp.js"></script>
+
+</head>
+<body class="easyui-layout">
+<div data-options="region:'west'" style="width: 800px;">
+    <form id="tbPerm" style="padding: 5px;height:70px;">
+        <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:200px"
+                data-options="url:'../../rest/DpSubSystem/all?isAsc=true&column=id',valueField:'subSystemCode',textField:'subSystemName',method:'GET'"></input>
+        <input class="easyui-textbox" type="text" id="operationName" name="operationName"
+               data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作名称',label:'操作名称'"/>
+        <input class="easyui-textbox" type="text" id="operationIdentifier" name="operationIdentifier"
+               data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作编码',label:'操作编码'"/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+           onclick="DpPermissionPropertyDefine.load()">查找</a>
+
+        <br>
+
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+           onclick="appendItem('DpPermissionPropertyDefineGrid')">增加</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+           onclick="removeItem('DpPermissionPropertyDefineGrid')">Remove</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
+           onclick="acceptItems('DpPermissionPropertyDefineGrid',DpPermissionPropertyDefine.saveData)">Accept</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
+           onclick="reject('DpPermissionPropertyDefineGrid')">Reject</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+           onclick="console.log(JSON.stringify(getChanges('DpPermissionPropertyDefineGrid')));">GetChanges</a>
+    </form>
+
+    <table id="DpPermissionPropertyDefineGrid" class="easyui-datagrid" title="权限属性定义" style="width:700px;height:auto">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:50">ID</th>
+            <th data-options="field:'propertyCode',width:200,align:'right',editor:'textbox'">属性代码</th>
+            <th data-options="field:'propertyName',width:200,align:'right',editor:'textbox'">属性名称</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div data-options="region:'center',split:true" style="width:400px;">
+    <table id="DpPermissionPropertyGrid" class="easyui-datagrid" title="权限属性值定义"
+           style="width:700px;height:auto">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:50">ID</th>
+            <th data-options="field:'valueCode',width:200,align:'right',editor:'textbox'">属性值</th>
+            <th data-options="field:'valueName',width:200,align:'right',editor:'textbox'">属性值含义</th>
+        </tr>
+        </thead>
+    </table>
+
+    <div id="tbItem" style="height:auto">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+           onclick="appendItem('DpPermissionPropertyGrid')">Append</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+           onclick="removeItem('DpPermissionPropertyGrid')">Remove</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
+           onclick="acceptItems('DpPermissionPropertyGrid',DpPermissionProperty.saveData)">Accept</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
+           onclick="removeItem('DpPermissionPropertyGrid')">Reject</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+           onclick="console.log(JSON.stringify(getChanges('DpPermissionPropertyGrid')));">GetChanges</a>
+    </div>
+</div>
+
+</body>
+</html>
+﻿
