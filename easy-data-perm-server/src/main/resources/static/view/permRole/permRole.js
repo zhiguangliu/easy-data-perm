@@ -9,6 +9,7 @@ $(function () {
         onSelect: function (index, row) {
             DpRole.id = row.id;
             $('#DpSelectedPermGrid').edatagrid("reload", {'roleId': row.id});
+            $('#DpPermissionPropertyDefineGrid').datagrid("reload", {'roleId': row.id});
         },
         // onLoadSuccess: function (data) {
         //     $('#DpPermissionItemMetaDataGrid').edatagrid("loadData", []);
@@ -42,6 +43,34 @@ $(function () {
 
     transfer.init();
 
+    $('#DpPermissionPropertyDefineGrid').datagrid({
+        url: DpPermissionProperty.define.listUrl,
+        method: 'get',
+        singleSelect: true,
+        toolbar: '#tbDpPermissionPropertyDefineGrid',
+        pagination: false,
+        fit: true,
+        onSelect: function (index, row) {
+            DpPermissionProperty.define.id = row.id;
+            DpPermissionProperty.define.propertyCode = row.propertyCode;
+            $('#DpPermissionPropertyGrid').datagrid("reload", {'roleId':DpRole.id,'propertyCode': row.propertyCode});
+        },
+        onLoadSuccess: function (data) {
+            // $('#DpPermissionItemMetaDataGrid').edatagrid("loadData", []);
+
+        }
+    });
+    $('#DpPermissionPropertyGrid').datagrid({
+        url: DpPermissionProperty.roleListUrl,
+        method: 'get',
+        singleSelect: true,
+        toolbar: '#tbItem',
+        pagination: true,
+        fit: true,
+        onSelect: function (index, row) {
+            console.log(1)
+        },
+    });
 });
 
 DpRole = {};
@@ -123,13 +152,11 @@ transfer = {
         switchUrl: contextPath + "/rest/role/dp-role-permission-relation/unrelation",
     },
 };
-
 transfer.init = function () {
     for (var x in transfer) {
         this.initOneList(transfer[x]);
     }
 };
-
 transfer.initOneList = function (options) {
     $('#' + options.id).datalist({
         url: options.dataUrl,
@@ -140,7 +167,6 @@ transfer.initOneList = function (options) {
         singleSelect: false,
     });
 }
-
 transfer.refresh = function () {
     for (var x in transfer) {
         this.refreshList(transfer[x]);
@@ -153,8 +179,6 @@ transfer.refreshList = function (options) {
             metadataId: DpRolePermissionWindow.metadataId
         });
 }
-
-
 transfer.switch = function (direction) {
     let config = transfer[direction];
     let param = [];
@@ -186,3 +210,11 @@ transfer.switch = function (direction) {
     }
 }
 
+
+DpPermissionProperty = {define:{}};
+// DpPermissionProperty.define.listUrl = contextPath + "/rest/prop/dp-base-property-define/list";
+DpPermissionProperty.define.listUrl = contextPath + "/rest/prop/dp-base-property-define/rolePropertyDefine";
+DpPermissionProperty.define.dataUrl = contextPath + "/rest/prop/dp-base-property-define/data";
+
+DpPermissionProperty.roleListUrl = contextPath + "/rest/prop/dp-base-property-value/rolePropertyList";
+DpPermissionProperty.dataUrl = contextPath + "/rest/prop/dp-base-property-value/data";

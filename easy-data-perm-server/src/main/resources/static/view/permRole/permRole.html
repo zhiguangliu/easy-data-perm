@@ -52,27 +52,69 @@
         </thead>
     </table>
 </div>
-<!--权限组表格-->
+<!--权限和属性的tab -->
 <div data-options="region:'center',split:true">
     <div class="easyui-layout" data-options="fit:true,border:false">
-        <div data-options="region:'west',split:true,border:false" style="width:400px;">
+        <div data-options="region:'west',split:true,border:false" style="width:500px;">
 
-            <table id="DpSelectedPermGrid" title="已选权限组">
-                <thead>
-                <tr>
-                    <th data-options="field:'id',width:50">ID</th>
-                    <th data-options="field:'operationName',width:200,align:'right',editor:'textbox'">操作名称</th>
-                    <th data-options="field:'permissionName',width:200,align:'right',editor:'textbox'">权限名称</th>
-                </tr>
-                </thead>
-            </table>
-            <div id="tbSelectedPerm" style="height:auto">
-<!--                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"-->
-<!--                   onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>-->
-                <button class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
-                   onclick="DpRolePermissionWindow.openWindow()">编辑</button>
+            <div id="roleConfig" class="easyui-tabs" data-options="fit:true,tabPosition:'top'">
+                <div title="角色权限管理" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
+                    <table id="DpSelectedPermGrid" title="已选权限组">
+                        <thead>
+                        <tr>
+                            <th data-options="field:'id',width:50">ID</th>
+                            <th data-options="field:'operationName',width:200,align:'right',editor:'textbox'">操作名称</th>
+                            <th data-options="field:'permissionName',width:200,align:'right',editor:'textbox'">权限名称</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div id="tbSelectedPerm" style="height:auto">
+                        <button class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"
+                                onclick="DpRolePermissionWindow.openWindow()">编辑
+                        </button>
+                    </div>
+                </div>
+                <div title="角色属性定义" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
+                    <div class="easyui-layout" data-options="fit:true">
+                        <div data-options="region:'west'" style="width: 300px;">
+                            <form id="tbDpPermissionPropertyDefineGrid" style="padding: 5px;height:auto;">
+                                <input class="easyui-textbox" type="text" id="operationIdentifier" name="operationIdentifier"
+                                       data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作编码',label:'操作编码'"/>
+                            </form>
+
+                            <table id="DpPermissionPropertyDefineGrid" class="easyui-datagrid" style="width:700px;height:auto">
+                                <thead>
+                                <tr>
+                                    <th data-options="field:'id',width:40">ID</th>
+                                    <th data-options="field:'propertyCode',width:120,align:'right'">属性代码</th>
+                                    <th data-options="field:'propertyName',width:120,align:'right'">属性名称</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div data-options="region:'center',split:true" style="width:400px;">
+                            <table id="DpPermissionPropertyGrid" class="easyui-datagrid" title="权限属性值定义" style="width:700px;height:auto">
+                                <thead>
+                                <tr>
+                                    <th data-options="field:'id',width:50">ID</th>
+                                    <th data-options="field:'valueCode',width:200,align:'right',editor:'textbox'">属性值</th>
+                                    <th data-options="field:'valueName',width:200,align:'right',editor:'textbox'">属性值含义</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
             </div>
+
+
         </div>
+
         <div data-options="region:'center'">
 
         </div>
@@ -87,11 +129,11 @@
                 <input class="easyui-textbox" type="text" id="operationName" name="operationName"
                        data-options="width:190,labelWidth:0,labelAlign:'right',prompt:'操作名称',label:''"/>
                 <button class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
-                   onclick="DpRolePermissionWindow.operationTableSearch()"></button>
+                        onclick="DpRolePermissionWindow.operationTableSearch()"></button>
             </div>
 
             <table id="DpPermissionGrid" class="easyui-datagrid" title="数据权限"
-                  data-options="toolbar:'#DpPermissionTb',fit:true">
+                   data-options="toolbar:'#DpPermissionTb',fit:true">
                 <thead>
                 <tr>
                     <th data-options="field:'id',width:40">ID</th>
