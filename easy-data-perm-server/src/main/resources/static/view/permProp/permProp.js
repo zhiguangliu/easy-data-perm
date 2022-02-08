@@ -72,6 +72,7 @@ DpPermissionProperty.dataUrl = contextPath + "/rest/prop/dp-base-property-value/
 DpPermissionProperty.saveData = function (data) {
     for (const item of data.add) {
         item.propertyCode = DpPermissionPropertyDefine.propertyCode;
+        item.subSystemCode = $("#subSystemCode").textbox("getValue");
     }
 
     $.ajax({
