@@ -61,14 +61,27 @@ $(function () {
         }
     });
     $('#DpPermissionPropertyGrid').datagrid({
-        url: DpPermissionProperty.roleListUrl,
+        url: DpPermissionProperty.value.roleListUrl,
         method: 'get',
-        singleSelect: true,
+        singleSelect: false,
         toolbar: '#tbItem',
         pagination: true,
         fit: true,
-        onSelect: function (index, row) {
-            console.log(1)
+        onCheck: function (index, row) {
+            console.log("onCheck" + JSON.stringify(row));
+            var data = {}
+            data.subSystemCode = $("#subSystemCode").textbox("getValue");
+            data.roleId = DpRole.id;
+            data.propertyValueId = row.id;
+            DpPermissionProperty.relation.relate(data)
+        },
+        onUncheck: function (index, row) {
+            console.log("onUncheck:" + JSON.stringify(row));
+            var data = {}
+            data.subSystemCode = $("#subSystemCode").textbox("getValue");
+            data.roleId = DpRole.id;
+            data.propertyValueId = row.id;
+            DpPermissionProperty.relation.release(data);
         },
     });
 });
@@ -211,10 +224,39 @@ transfer.switch = function (direction) {
 }
 
 
-DpPermissionProperty = {define:{}};
+DpPermissionProperty = {define:{},value:{},relation:{}};
 // DpPermissionProperty.define.listUrl = contextPath + "/rest/prop/dp-base-property-define/list";
 DpPermissionProperty.define.listUrl = contextPath + "/rest/prop/dp-base-property-define/rolePropertyDefine";
 DpPermissionProperty.define.dataUrl = contextPath + "/rest/prop/dp-base-property-define/data";
 
-DpPermissionProperty.roleListUrl = contextPath + "/rest/prop/dp-base-property-value/rolePropertyList";
-DpPermissionProperty.dataUrl = contextPath + "/rest/prop/dp-base-property-value/data";
+DpPermissionProperty.value.roleListUrl = contextPath + "/rest/prop/dp-base-property-value/rolePropertyList";
+
+DpPermissionProperty.relation.relateUrl = contextPath + "/rest/role/dp-role-property-relation/relate";
+DpPermissionProperty.relation.releaseUrl = contextPath + "/rest/role/dp-role-property-relation/release";
+
+
+DpPermissionProperty.relation.relate = function (data) {
+    $.ajax({
+        type: "POST",
+        url: DpPermissionProperty.relation.relateUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (result) {
+        },
+        error: function (result) {
+        }
+    });
+};
+DpPermissionProperty.relation.release = function (data) {
+    $.ajax({
+        type: "POST",
+        url: DpPermissionProperty.relation.releaseUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(data),
+        success: function (result) {
+        },
+        error: function (result) {
+        }
+    });
+
+}

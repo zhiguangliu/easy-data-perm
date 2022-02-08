@@ -55,10 +55,10 @@
 <!--权限和属性的tab -->
 <div data-options="region:'center',split:true">
     <div class="easyui-layout" data-options="fit:true,border:false">
-        <div data-options="region:'west',split:true,border:false" style="width:500px;">
+        <div data-options="region:'west',split:true,border:false" style="width:600px;">
 
             <div id="roleConfig" class="easyui-tabs" data-options="fit:true,tabPosition:'top'">
-                <div title="角色权限管理" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
+                <div title="角色权限设置" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
                     <table id="DpSelectedPermGrid" title="已选权限组">
                         <thead>
                         <tr>
@@ -74,7 +74,7 @@
                         </button>
                     </div>
                 </div>
-                <div title="角色属性定义" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
+                <div title="角色属性设置" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
                     <div class="easyui-layout" data-options="fit:true">
                         <div data-options="region:'west'" style="width: 300px;">
                             <form id="tbDpPermissionPropertyDefineGrid" style="padding: 5px;height:auto;">
@@ -97,6 +97,7 @@
                                 <thead>
                                 <tr>
                                     <th data-options="field:'id',width:50">ID</th>
+                                    <th data-options="field:'checked',checkbox:true"></th>
                                     <th data-options="field:'valueCode',width:200,align:'right',editor:'textbox'">属性值</th>
                                     <th data-options="field:'valueName',width:200,align:'right',editor:'textbox'">属性值含义</th>
                                 </tr>

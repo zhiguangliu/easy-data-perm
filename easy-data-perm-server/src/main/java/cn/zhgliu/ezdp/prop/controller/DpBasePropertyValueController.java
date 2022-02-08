@@ -5,6 +5,8 @@ import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.prop.entity.DpBasePropertyValue;
 import cn.zhgliu.ezdp.prop.entity.DpBasePropertyValueCheckedVo;
 import cn.zhgliu.ezdp.role.entity.DpRole;
+import cn.zhgliu.ezdp.role.entity.DpRolePropertyRelation;
+import cn.zhgliu.ezdp.role.service.IDpRolePropertyRelationService;
 import cn.zhgliu.ezdp.role.service.IDpRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +50,9 @@ public class DpBasePropertyValueController extends CommonController<DpBaseProper
     @Resource
     IDpRoleService iDpRoleService;
 
+    @Resource
+    IDpRolePropertyRelationService iDpRolePropertyRelationService;
+
     @RequestMapping("/rolePropertyList")
     public List<DpBasePropertyValue> find(Integer roleId, String propertyCode) {
         DpRole role = iDpRoleService.getById(roleId);
@@ -56,10 +62,18 @@ public class DpBasePropertyValueController extends CommonController<DpBaseProper
         param.setPropertyCode(propertyCode);
         param.setSubSystemCode(subSystemCode);
         List<DpBasePropertyValue> list = this.iService.list(new QueryWrapper<>(param));
+
+        DpRolePropertyRelation rParam = new DpRolePropertyRelation();
+        rParam.setRoleId(roleId);
+        rParam.setSubSystemCode(subSystemCode);
+        List<DpRolePropertyRelation> relations = iDpRolePropertyRelationService.list(new QueryWrapper<>(rParam));
+        Set<Integer> relatedId = relations.stream().map(DpRolePropertyRelation::getPropertyValueId).collect(Collectors.toSet());
+
+
         List<DpBasePropertyValue> ret = list.stream().map(item -> {
             DpBasePropertyValueCheckedVo newItem = new DpBasePropertyValueCheckedVo();
             BeanUtils.copyProperties(item, newItem);
-            newItem.setChecked(0);
+            newItem.setChecked(relatedId.contains(item.getId())?1:0);
             return newItem;
         }).collect(Collectors.toList());
 
