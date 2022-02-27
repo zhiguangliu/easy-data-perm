@@ -69,7 +69,7 @@ public class MysqlGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName("permission");
+        pc.setModuleName("role");
         pc.setParent("cn.zhgliu.ezdp");
         mpg.setPackageInfo(pc);
 
@@ -100,7 +100,7 @@ public class MysqlGenerator {
 //        strategy.setSuperEntityClass("com.baomidou.mybatisplus.samples.generator.common.BaseEntity");
         strategy.setEntityLombokModel(true);
 //        strategy.setSuperControllerClass("com.baomidou.mybatisplus.samples.generator.common.BaseController");
-        strategy.setInclude("dp_permission_item");
+        strategy.setInclude("dp_role_user");
 //        strategy.setSuperEntityColumns("id");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");

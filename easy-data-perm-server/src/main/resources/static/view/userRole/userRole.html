@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../../libs/easyui/demo/demo.css">
+
+    <script type="text/javascript" src="../../libs/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/datagrid-cellediting.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/jquery.edatagrid.js"></script>
+    <script type="text/javascript" src="../../libs/common.js"></script>
+    <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
+
+    <script type="text/javascript" src="userRole.js"></script>
+
+</head>
+<body class="easyui-layout">
+<div data-options="region:'west',split:true" style="width: 550px;">
+    <form id="tbUser" style="padding: 5px;height:70px;">
+        <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:150px"
+               data-options="labelWidth:55,url:'../../rest/DpSubSystem/all',valueField:'subSystemCode',textField:'subSystemName',method:'GET',onChange:DpUser.load"/>
+        <input class="easyui-textbox" type="text" id="userName" name="userName"
+               data-options="width:180,labelWidth:70,labelAlign:'right',prompt:'用户名',label:'用户名'"/>
+        <input class="easyui-textbox" type="text" id="email" name="email"
+               data-options="width:180,labelWidth:70,labelAlign:'right',prompt:'电子邮件',label:'电子邮件'"/>
+        <input class="easyui-textbox" type="text" id="mobilePhone" name="mobilePhone"
+               data-options="width:180,labelWidth:70,labelAlign:'right',prompt:'手机号码',label:'手机号码'"/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+           onclick="DpUser.load()">查找</a>
+    </form>
+
+    <table id="DpUserDataGrid" class="easyui-datagrid" title="用户" style="width:500px;height:auto">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:50">ID</th>
+            <th data-options="field:'userName',width:100,align:'right'">用户名</th>
+            <th data-options="field:'email',width:175,align:'right'">电子邮件</th>
+            <th data-options="field:'mobilePhone',width:175,align:'right'">手机号码</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div data-options="region:'center'" style="width:400px;">
+
+    <div id="cc" class="easyui-layout" data-options="fit:true,border:false">
+        <div data-options="region:'west',split:true,border:false" style="width:400px;">
+            <table id="DpRoleGrid" class="easyui-datagrid" title="角色选择"
+                   style="height:auto">
+                <thead>
+                <tr>
+                    <th data-options="field:'id',width:50">ID</th>
+                    <th data-options="field:'checked',checkbox:true"></th>
+                    <th data-options="field:'roleName',width:200,align:'right'">角色名称</th>
+                </tr>
+                </thead>
+            </table>
+            <div id="tbRole" style="height:auto">
+                <input class="easyui-textbox" type="text" id="roleName" name="roleName"
+                       data-options="width:180,labelWidth:70,labelAlign:'right',prompt:'角色名',label:'角色名'"/>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+                   onclick="DpUser.DpRoleUser.loadRole">查找</a>
+            </div>
+        </div>
+        <div data-options="region:'center',border:false" style="background:#eee;">
+            <table id="DpUserPermissionGrid" class="easyui-datagrid" title="用户最终权限"
+                   style="height:auto">
+                <thead>
+                <tr>
+                    <th data-options="field:'id',width:50">ID</th>
+                    <th data-options="field:'roleName',width:200,align:'right'">角色名称</th>
+                </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>
+﻿

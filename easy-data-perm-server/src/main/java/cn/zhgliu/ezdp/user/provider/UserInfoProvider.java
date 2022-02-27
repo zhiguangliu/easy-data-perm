@@ -10,6 +10,6 @@ public interface UserInfoProvider {
 
     UserInfo getUserInfoById();
 
-    List<UserInfo> listUserInfo(UserInfo userInfo);
+    List<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize);
 
 }
