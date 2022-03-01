@@ -3,7 +3,7 @@ package cn.zhgliu.ezdp.prop.controller;
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.consts.ValueType;
-import cn.zhgliu.ezdp.easyui.Pagination;
+import cn.zhgliu.ezdp.web.Pagination;
 import cn.zhgliu.ezdp.prop.entity.DpBasePropertyDefine;
 import cn.zhgliu.ezdp.role.entity.DpRole;
 import cn.zhgliu.ezdp.role.service.IDpRoleService;

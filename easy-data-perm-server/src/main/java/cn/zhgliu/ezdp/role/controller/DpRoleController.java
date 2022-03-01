@@ -2,7 +2,7 @@ package cn.zhgliu.ezdp.role.controller;
 
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
-import cn.zhgliu.ezdp.easyui.Pagination;
+import cn.zhgliu.ezdp.web.Pagination;
 import cn.zhgliu.ezdp.role.entity.DpRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Controller;

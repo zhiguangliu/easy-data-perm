@@ -1,7 +1,7 @@
 package cn.zhgliu.ezdp.comm.controller;
 
 import cn.zhgliu.ezdp.comm.CommonWebResult;
-import cn.zhgliu.ezdp.easyui.Pagination;
+import cn.zhgliu.ezdp.web.Pagination;
 import cn.zhgliu.ezdp.web.BatchData;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

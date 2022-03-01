@@ -1,8 +1,7 @@
 package cn.zhgliu.ezdp.user.provider;
 
 import cn.zhgliu.ezdp.user.vo.UserInfo;
-
-import java.util.List;
+import cn.zhgliu.ezdp.web.Pagination;
 
 public interface UserInfoProvider {
 
@@ -10,6 +9,6 @@ public interface UserInfoProvider {
 
     UserInfo getUserInfoById(String userId);
 
-    List<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize);
+    Pagination<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize);
 
 }

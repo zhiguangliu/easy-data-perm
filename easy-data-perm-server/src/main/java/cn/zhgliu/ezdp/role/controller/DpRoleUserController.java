@@ -1,9 +1,11 @@
 package cn.zhgliu.ezdp.role.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import cn.zhgliu.ezdp.comm.controller.CommonController;
+import cn.zhgliu.ezdp.role.entity.DpRoleUser;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * <p>
@@ -15,6 +17,13 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 @RequestMapping("/role/dp-role-user")
-public class DpRoleUserController {
+public class DpRoleUserController extends CommonController<DpRoleUser> {
+
+    public DpRoleUserController(IService<DpRoleUser> iService) {
+        super(iService);
+    }
+
+
+
 
 }

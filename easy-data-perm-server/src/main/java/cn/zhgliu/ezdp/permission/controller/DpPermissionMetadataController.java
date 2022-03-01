@@ -2,7 +2,7 @@ package cn.zhgliu.ezdp.permission.controller;
 
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
-import cn.zhgliu.ezdp.easyui.Pagination;
+import cn.zhgliu.ezdp.web.Pagination;
 import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;

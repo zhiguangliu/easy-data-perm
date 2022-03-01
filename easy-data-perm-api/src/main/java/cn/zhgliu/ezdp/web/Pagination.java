@@ -1,4 +1,4 @@
-package cn.zhgliu.ezdp.easyui;
+package cn.zhgliu.ezdp.web;
 
 import java.io.Serializable;
 import java.util.List;
