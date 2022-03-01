@@ -8,7 +8,7 @@ public interface UserInfoProvider {
 
     Boolean support(String subsystemCode);
 
-    UserInfo getUserInfoById();
+    UserInfo getUserInfoById(String userId);
 
     List<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize);
 
