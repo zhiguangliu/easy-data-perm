@@ -3,6 +3,7 @@ package cn.zhgliu.ezdp.role.controller;
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
 import cn.zhgliu.ezdp.role.entity.DpRoleUser;
+import cn.zhgliu.ezdp.web.Pagination;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,8 @@ public class DpRoleUserController extends CommonController<DpRoleUser> {
         super(iService);
     }
 
-
-
-
+    @Override
+    public Pagination<DpRoleUser> page(Integer page, Integer rows, DpRoleUser param, Boolean isAsc, String... column) {
+        return super.page(page, rows, param, isAsc, column);
+    }
 }

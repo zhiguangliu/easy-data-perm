@@ -2,6 +2,8 @@ package cn.zhgliu.ezdp.user.vo;
 
 public class UserInfo {
 
+    private String subSystemCode;
+
     private String userId;
 
     private String userName;
@@ -43,6 +45,15 @@ public class UserInfo {
 
     public UserInfo setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+        return this;
+    }
+
+    public String getSubSystemCode() {
+        return subSystemCode;
+    }
+
+    public UserInfo setSubSystemCode(String subSystemCode) {
+        this.subSystemCode = subSystemCode;
         return this;
     }
 }

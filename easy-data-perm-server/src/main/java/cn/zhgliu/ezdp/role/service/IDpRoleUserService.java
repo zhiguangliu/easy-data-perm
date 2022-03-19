@@ -15,6 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDpRoleUserService extends IService<DpRoleUser> {
 
-    Pagination<UserInfo> findUser(UserInfo userInfo);
+    Pagination<UserInfo> findUser(UserInfo userInfo, Integer pageNum, Integer pageSize);
 
 }
