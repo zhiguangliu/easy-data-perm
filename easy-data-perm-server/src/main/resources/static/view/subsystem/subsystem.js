@@ -3,9 +3,8 @@ $(function () {
         url: SubSystem.allUrl,
         singleSelect: true,
         toolbar: '#tb',
-        method: 'get'
+        method: 'get',
     });
-
 });
 
 SubSystem = {};

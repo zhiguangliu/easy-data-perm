@@ -15,31 +15,40 @@
     <script type="text/javascript" src="../../libs/easyui/common-row-edit-toolbar.js"></script>
 
 </head>
-<body>
-<table id="DpSubSystemGrid" class="easyui-datagrid" title="子系统维护" style="width:700px;height:auto">
-    <thead>
-    <tr>
-        <th data-options="field:'id',width:80">ID</th>
-        <th data-options="field:'subSystemCode',width:80,align:'right',editor:'textbox'">子系统编码</th>
-        <th data-options="field:'subSystemName',width:80,align:'right',editor:'textbox'">子系统名称</th>
-        <th data-options="field:'defaultMatchingMode',width:80,align:'right',
+<body class="easyui-layout">
+<div data-options="region:'center',title:'子系统维护'">
+
+    <table id="DpSubSystemGrid" class="easyui-datagrid"
+           data-options="fit:true">
+        <thead>
+        <tr>
+            <th data-options="field:'id',width:80">ID</th>
+            <th data-options="field:'subSystemCode',width:150,align:'right',editor:'textbox'">子系统编码</th>
+            <th data-options="field:'subSystemName',width:150,align:'right',editor:'textbox'">子系统名称</th>
+            <th data-options="field:'defaultMatchingMode',width:150,align:'right',
                             editor:{
                                 type:'combobox',
                                 options:{
                                     data:[{'text':'严格',value:'STRICT'},{'text':'宽松',value:'LENIENT'}]
                                 }
-                            }">默认匹配模式</th>
-        <th data-options="field:'userInfoProvider',width:250,editor:'textbox'">USER INFO PROVIDER</th>
-    </tr>
-    </thead>
-</table>
+                            }">默认匹配模式
+            </th>
+            <th data-options="field:'userInfoProvider',width:250,editor:'textbox'">USER INFO PROVIDER</th>
+        </tr>
+        </thead>
+    </table>
+</div>
 
-<div id="tb" style="height:35px;">
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="appendItem('DpSubSystemGrid')">增加</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="removeItem('DpSubSystemGrid')">删除</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="acceptItems('DpSubSystemGrid',SubSystem.saveData)">保存</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject('DpSubSystemGrid')">还原</a>
-<!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>-->
+<div id="tb" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false"
+       onclick="appendItem('DpSubSystemGrid')">增加</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:false"
+       onclick="removeItem('DpSubSystemGrid')">删除</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:false"
+       onclick="acceptItems('DpSubSystemGrid',SubSystem.saveData)">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:false"
+       onclick="reject('DpSubSystemGrid')">还原</a>
+    <!--    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:false" onclick="console.log(JSON.stringify(getChanges('DpSubSystemGrid')));">GetChanges</a>-->
 </div>
 
 <script type="text/javascript" src="subsystem.js"></script>
