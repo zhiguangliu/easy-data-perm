@@ -1,15 +1,16 @@
 $(function () {
     $('#DpUserDataGrid').datagrid({
-        url: DpUser.pageUrl,
+        url: DpUser.searchUserByPageUrl,
         method: 'get',
         singleSelect: true,
         toolbar: '#tbUser',
         pagination: true,
         fit: true,
-        // onSelect: function (index, row) {
-        //     DpPermissionMetadata.id = row.id;
-        //     $('#DpPermissionGrid').edatagrid("reload", {'metadataId': row.id});
-        // },
+        onSelect: function (index, row) {
+            var userId = row.userId;
+            let subSystemCode = $('#subSystemCode').combobox('getValue');
+            $('#DpRoleGrid').datagrid("reload", {'userId': row.userId, 'subSystemCode': subSystemCode});
+        },
         // onLoadSuccess: function (data) {
         //     $('#DpPermissionItemMetaDataGrid').edatagrid("loadData", []);
         //
@@ -22,10 +23,9 @@ $(function () {
         toolbar: '#tbRole',
         pagination: false,
         fit: true,
-        // onSelect: function (index, row) {
-        //     DpPermissionItem.editIndex = undefined
-        //     $('#DpPermissionItemGrid').edatagrid("reload", {'permissionId': row.id});
-        // },
+        selectOnCheck: false,
+        onCheck: DpRoleUser.onCheck,
+        onUncheck: DpRoleUser.onUncheck,
     });
     $('#DpUserPermissionGrid').datagrid({
         url: DpRoleUser.findPermissionUrl,
@@ -36,27 +36,55 @@ $(function () {
 });
 
 DpUser = {};
-DpUser.pageUrl = contextPath + "/rest/permission/dp-permission-metadata/page";
+DpUser.pageUrl = contextPath + "/rest/role/dp-role-user/page";
+DpUser.searchUserByPageUrl = contextPath + "/rest/role/dp-role-user/searchUserByPage";
 
-// http://localhost:8899/ezdp//rest/permission/dp-permission-metadata/page?pageNum=1&pageSize=10&operationName=aa
+
 DpUser.load = function () {
-//     param = {};
-//     if ($("#subSystemCode").textbox("getValue")) {
-//         param.subSystemCode = $("#subSystemCode").textbox("getValue")
-//     }
-//     if ($("#operationName").textbox("getValue")) {
-//         param.operationName = $("#operationName").textbox("getValue")
-//     }
-//     if ($("#operationIdentifier").textbox("getValue")) {
-//         param.operationIdentifier = $("#operationIdentifier").textbox("getValue")
-//     }
-//     $('#DpPermissionMetaDataGrid').datagrid('reload', param);
+    param = {};
+    if ($("#keyword").textbox("getValue")) {
+        param.keyword = $("#keyword").textbox("getValue")
+    }
+    if ($("#subSystemCode").textbox("getValue")) {
+        param.subSystemCode = $("#subSystemCode").textbox("getValue")
+    }
+
+    $('#DpUserDataGrid').datagrid('reload', param);
 };
 
 
 DpRoleUser = {};
-DpRoleUser.findRoleUrl =  contextPath + "/rest/permission/dp-permission-metadata/page";
-DpRoleUser.findPermissionUrl =  contextPath + "/rest/permission/dp-permission-metadata/page";
+DpRoleUser.findRoleUrl = contextPath + "/rest/role/dp-role-user/listRoleWithCheckInfo";
+DpRoleUser.checkUrl = contextPath + "/rest/role/dp-role-user/check";
+DpRoleUser.uncheckUrl = contextPath + "/rest/role/dp-role-user/uncheck";
+
+DpRoleUser.onCheck = function (index, row) {
+    console.log(JSON.stringify(row));
+    $.ajax({
+        type: "POST",
+        url: DpRoleUser.checkUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(row),
+        success: function (result) {
+            console.log(JSON.stringify(result));
+            $('#DpRoleGrid').datagrid('reload');
+        }
+    });
+}
+
+DpRoleUser.onUncheck = function (index, row) {
+    console.log(JSON.stringify(row));
+    $.ajax({
+        type: "POST",
+        url: DpRoleUser.uncheckUrl,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify(row),
+        success: function (result) {
+            console.log(JSON.stringify(result));
+            $('#DpRoleGrid').datagrid('reload');
+        }
+    });
+}
 // DpPermission.listUrl = contextPath + "/rest/permission/dp-permission/list";
 // DpPermission.dataUrl = contextPath + "/rest/permission/dp-permission/data";
 //

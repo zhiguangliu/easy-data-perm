@@ -3,10 +3,12 @@ package cn.zhgliu.ezdp.user.provider.impl;
 import cn.zhgliu.ezdp.user.provider.UserInfoProvider;
 import cn.zhgliu.ezdp.user.vo.UserInfo;
 import cn.zhgliu.ezdp.web.Pagination;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhgliu
@@ -29,7 +31,8 @@ public class DemoUserInfoProvider implements UserInfoProvider {
     }
 
     @Override
-    public Pagination<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize) {
+    public Pagination<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize,
+                                                   Boolean isAsc, String... column) {
         Pagination ret = new Pagination();
 
         List<UserInfo> rows = new ArrayList<>(8);
@@ -43,4 +46,21 @@ public class DemoUserInfoProvider implements UserInfoProvider {
 
         return ret;
     }
+
+    @Override
+    public Pagination<UserInfo> searchUserByKeywordByPage(String keyword, Integer pageNum, Integer pageSize,
+                                                          Boolean isAsc, String... column) {
+        Pagination<UserInfo> userInfoPagination = listUserInfoByPage(null, null, null, null, "");
+
+        if (StringUtils.isNotEmpty(keyword)) {
+            List<UserInfo> collect = userInfoPagination.getRows().stream()
+                    .filter(item -> StringUtils.contains(item.getEmail(), keyword))
+                    .collect(Collectors.toList());
+            userInfoPagination.setRows(collect);
+        }
+
+        return userInfoPagination;
+    }
+
+
 }

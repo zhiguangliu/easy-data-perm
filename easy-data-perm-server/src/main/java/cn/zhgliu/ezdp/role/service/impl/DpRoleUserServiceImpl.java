@@ -26,12 +26,25 @@ public class DpRoleUserServiceImpl extends ServiceImpl<DpRoleUserMapper, DpRoleU
     @Resource
     List<UserInfoProvider> userInfoProviderList;
 
+
     @Override
-    public Pagination<UserInfo> findUser(UserInfo userInfo, Integer pageNum, Integer pageSize) {
+    public Pagination<UserInfo> findUser(UserInfo userInfo, Integer pageNum, Integer pageSize,
+                                         Boolean isAsc, String... column) {
         String subSystemCode = userInfo.getSubSystemCode();
         for (UserInfoProvider userInfoProvider : userInfoProviderList) {
             if (userInfoProvider.support(subSystemCode)) {
-                return userInfoProvider.listUserInfoByPage(userInfo, pageNum, pageSize);
+                return userInfoProvider.listUserInfoByPage(userInfo, pageNum, pageSize, isAsc, column);
+            }
+        }
+        throw new RuntimeException("没有对应的用户信息提供者！");
+    }
+
+    @Override
+    public Pagination<UserInfo> searchUser(String subSystemCode, String keyword, Integer pageNum, Integer pageSize,
+                                           Boolean isAsc, String... column) {
+        for (UserInfoProvider userInfoProvider : userInfoProviderList) {
+            if (userInfoProvider.support(subSystemCode)) {
+                return userInfoProvider.searchUserByKeywordByPage(keyword, pageNum, pageSize, isAsc, column);
             }
         }
         throw new RuntimeException("没有对应的用户信息提供者！");
