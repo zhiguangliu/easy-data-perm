@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class DemoUserInfoProvider implements UserInfoProvider {
     @Override
     public Boolean support(String subsystemCode) {
-        return true;
+        return "DEMO".equals(subsystemCode);
     }
 
     @Override
