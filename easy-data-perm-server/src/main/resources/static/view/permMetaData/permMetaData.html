@@ -20,32 +20,41 @@
 
 </head>
 <body class="easyui-layout">
+<div data-options="region:'north',
+                    title:'权限元数据维护'"
+     style="height: 83px;padding: 8px;">
+    <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:400px"
+           data-options="url:'../../rest/DpSubSystem/all?isAsc=true&column=id',
+                    method:'GET',
+                    valueField:'subSystemCode',
+                    textField:'subSystemName' ,
+                    onChange: DpPermissionMetadata.load ,
+    "/>
+</div>
 <div data-options="region:'west'" style="width: 800px;">
-    <form id="tbPerm" style="padding: 5px;height:70px;">
-        <input class="easyui-combobox" id="subSystemCode" name="subSystemCode" label="子系统" style="width:200px"
-                data-options="url:'../../rest/DpSubSystem/all?isAsc=true&column=id',valueField:'subSystemCode',textField:'subSystemName',method:'GET'"></input>
+    <form id="tbPerm" style="padding: 5px;height:80px;">
         <input class="easyui-textbox" type="text" id="operationName" name="operationName"
-               data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作名称',label:'操作名称'"/>
+               data-options="width:300,labelWidth:80,labelAlign:'right',prompt:'操作名称',label:'操作名称'"/>
         <input class="easyui-textbox" type="text" id="operationIdentifier" name="operationIdentifier"
-               data-options="width:240,labelWidth:60,labelAlign:'right',prompt:'操作编码',label:'操作编码'"/>
+               data-options="width:300,labelWidth:80,labelAlign:'right',prompt:'操作编码',label:'操作编码'"/>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
            onclick="DpPermissionMetadata.load()">查找</a>
 
         <br>
 
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false"
            onclick="appendItem('DpPermissionMetaDataGrid')">增加</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:false"
            onclick="removeItem('DpPermissionMetaDataGrid')">Remove</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:false"
            onclick="acceptItems('DpPermissionMetaDataGrid',DpPermissionMetadata.saveData)">Accept</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:false"
            onclick="reject('DpPermissionMetaDataGrid')">Reject</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:false"
            onclick="console.log(JSON.stringify(getChanges('DpPermissionMetaDataGrid')));">GetChanges</a>
     </form>
 
-    <table id="DpPermissionMetaDataGrid" class="easyui-datagrid" title="数据操作元数据" style="width:700px;height:auto">
+    <table id="DpPermissionMetaDataGrid" class="easyui-datagrid" style="width:700px;height:auto">
         <thead>
         <tr>
             <th data-options="field:'id',width:50">ID</th>
@@ -72,7 +81,7 @@
     </table>
 </div>
 <div data-options="region:'center',split:true" style="width:400px;">
-    <table id="DpPermissionItemMetaDataGrid" class="easyui-datagrid" title="操作项元数据"
+    <table id="DpPermissionItemMetaDataGrid" class="easyui-datagrid"
            style="width:700px;height:auto">
         <thead>
         <tr>
@@ -92,16 +101,17 @@
         </thead>
     </table>
 
-    <div id="tbItem" style="height:auto">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"
+    <div id="tbItem" style="height:80px;">
+
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false"
            onclick="appendItem('DpPermissionItemMetaDataGrid')">Append</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:false"
            onclick="removeItem('DpPermissionItemMetaDataGrid')">Remove</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:false"
            onclick="acceptItems('DpPermissionItemMetaDataGrid',DpPermissionItemMetadata.saveData)">Accept</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:false"
            onclick="removeItem('DpPermissionItemMetaDataGrid')">Reject</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:false"
            onclick="console.log(JSON.stringify(getChanges('DpPermissionItemMetaDataGrid')));">GetChanges</a>
     </div>
 </div>
