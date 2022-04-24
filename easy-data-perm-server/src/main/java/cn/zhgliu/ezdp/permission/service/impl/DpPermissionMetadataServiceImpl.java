@@ -24,7 +24,10 @@ public class DpPermissionMetadataServiceImpl extends ServiceImpl<DpPermissionMet
     @Override
     public DataPermissionBaseInfo matchingMode(DpPermissionMetadata dpPermissionMetadata) {
         DpPermissionMetadata result = this.baseMapper.selectOne(new QueryWrapper<>(dpPermissionMetadata));
-        MatchingMode matchingMode = MatchingMode.valueOf(result.getMatchingMode());
+        if(result == null){
+            return new DataPermissionBaseInfo(MatchingMode.STRICT, ApplyMethod.EMBED);
+        }
+            MatchingMode matchingMode = MatchingMode.valueOf(result.getMatchingMode());
         ApplyMethod applyMethod = ApplyMethod.valueOf(result.getApplyMethod());
         return new DataPermissionBaseInfo(matchingMode, applyMethod);
     }
