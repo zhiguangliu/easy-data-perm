@@ -22,7 +22,7 @@ create table dp_base_property_define
 /*==============================================================*/
 create table dp_base_property_value
 (
-   id                   int not null comment '主键',
+   id                   int not null auto_increment comment '主键',
    sub_system_code      varchar(100),
    property_code        varchar(100) not null,
    value_code           varchar(100),
@@ -42,7 +42,7 @@ create table dp_base_property_value
 /*==============================================================*/
 create table dp_permission
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    sub_system_code      varchar(100) not null,
    metadata_id          int,
    permission_name      varchar(200),
@@ -62,13 +62,13 @@ create table dp_permission
 /*==============================================================*/
 create table dp_permission_item
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    sub_system_code      varchar(100) not null,
    permission_id        int,
    metadata_id          int,
    relation             varchar(20),
    value_type           varchar(20),
-   filed_value          varchar(2000),
+   fleld_value          varchar(2000),
    apply_method         varchar(20),
    target_table_name    varchar(100),
    filed_name           varchar(100),
@@ -88,7 +88,7 @@ create table dp_permission_item
 /*==============================================================*/
 create table dp_permission_item_metadata
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    sub_system_code      varchar(100) not null,
    permission_metadata_id int,
    target_table_name    varchar(100),
@@ -110,7 +110,7 @@ create table dp_permission_item_metadata
 /*==============================================================*/
 create table dp_permission_metadata
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    sub_system_code      varchar(100) not null,
    operation_name       varchar(200),
    operation_identifier varchar(400),
@@ -154,7 +154,7 @@ create table dp_role
 /*==============================================================*/
 create table dp_role_permission_relation
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    dp__id               int,
    sub_system_code      varchar(100),
    role_id              int,
@@ -174,7 +174,7 @@ create table dp_role_permission_relation
 /*==============================================================*/
 create table dp_role_property_relation
 (
-   id                   int not null,
+   id                   int not null auto_increment,
    property_code        varchar(100),
    sub_system_code      varchar(100),
    role_id              int,
