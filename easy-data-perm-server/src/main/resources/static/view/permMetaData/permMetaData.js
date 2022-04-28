@@ -68,6 +68,7 @@ DpPermissionMetadata.saveData = function (data) {
 DpPermissionItemMetadata.saveData = function (data) {
     for (const item of data.add) {
         item.permissionMetadataId = DpPermissionMetadata.id;
+        item.subSystemCode = $("#subSystemCode").textbox("getValue");
     }
 
     $.ajax({

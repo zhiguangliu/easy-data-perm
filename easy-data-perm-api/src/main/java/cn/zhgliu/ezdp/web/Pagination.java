@@ -1,6 +1,7 @@
 package cn.zhgliu.ezdp.web;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Pagination<T> implements Serializable {
@@ -24,11 +25,13 @@ public class Pagination<T> implements Serializable {
     protected List<T> rows;
 
     public Pagination() {
+        this.rows = new LinkedList<>();
     }
 
     public Pagination(Integer pageNum, Integer pageSize) {
         this.pageNum = pageNum != null ? pageNum : 1;
         this.pageSize = pageSize != null ? pageSize : 20;
+        this.rows = new LinkedList<>();
     }
 
     public Pagination(Integer pageNum, Integer pageSize, List<T> rows) {

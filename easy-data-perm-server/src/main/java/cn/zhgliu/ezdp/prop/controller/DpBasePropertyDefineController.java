@@ -76,6 +76,9 @@ public class DpBasePropertyDefineController extends CommonController<DpBasePrope
     @RequestMapping("/rolePropertyDefine")
     @ResponseBody
     public List<DpBasePropertyDefine> getRolePropertyDefine(Integer roleId) {
+        if (roleId == null) {
+            return new LinkedList<>();
+        }
         DpRole role = iDpRoleService.getById(roleId);
         String subSystemCode = role.getSubSystemCode();
         DpBasePropertyDefine param = new DpBasePropertyDefine();

@@ -55,6 +55,9 @@ public class DpBasePropertyValueController extends CommonController<DpBaseProper
 
     @RequestMapping("/rolePropertyList")
     public List<DpBasePropertyValue> find(Integer roleId, String propertyCode) {
+        if (roleId == null) {
+            return new LinkedList<>();
+        }
         DpRole role = iDpRoleService.getById(roleId);
         String subSystemCode = role.getSubSystemCode();
 
