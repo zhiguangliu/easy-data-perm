@@ -9,6 +9,7 @@ import cn.zhgliu.ezdp.permission.entity.DpPermissionMetadata;
 import cn.zhgliu.ezdp.permission.entity.WithRoleDpPermissionItem;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionItemService;
 import cn.zhgliu.ezdp.permission.service.IDpPermissionMetadataService;
+import cn.zhgliu.ezdp.prop.service.IDpBasePropertyValueService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zhgliu
@@ -58,6 +60,11 @@ public class ApiInterfaceController {
             ret.stream().forEach(item -> {
                 DataPermissionItem target = new DataPermissionItem();
                 BeanUtils.copyProperties(item, target);
+
+                if ("PROPERTY".equals(item.getValueType())) {
+                    target.setFieldValue(getPropertyValue(subsystem,userId, item.getFieldValue()));
+                }
+
                 if (!tempMap.containsKey(item.getRoleId())) {
                     tempMap.put(item.getRoleId(), new LinkedList<>());
                 }
@@ -68,6 +75,16 @@ public class ApiInterfaceController {
         } else {
             return new LinkedList<>();
         }
+    }
+
+
+    @Resource
+    IDpBasePropertyValueService iDpBasePropertyValueService;
+
+    private String getPropertyValue(String subsystem,String userId, String fieldValue) {
+        List<String> properties = iDpBasePropertyValueService.getProperties(subsystem, userId, fieldValue);
+
+        return properties.stream().collect(Collectors.joining(","));
     }
 
     @GetMapping("/fullPermissionInfo")

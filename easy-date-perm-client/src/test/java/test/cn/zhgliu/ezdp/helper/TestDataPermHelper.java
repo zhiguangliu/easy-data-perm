@@ -16,18 +16,16 @@ public class TestDataPermHelper {
     public void multiThreadEmptyTest() throws InterruptedException {
         int threadCount = 2;
 
-        DataPermHelper.applyPermission(null, null);
+        DataPermHelper.applyPermission(null);
 
         CountDownLatch countDownLatch = new CountDownLatch(threadCount);
         for (int i = 0; i < threadCount; i++) {
             new Thread(() -> {
-                String statementCode = DataPermHelper.getStatementCode();
                 String userId = DataPermHelper.getUserId();
-                System.out.println(Thread.currentThread().getName() + ":" + userId + " OF " + statementCode);
+                System.out.println(Thread.currentThread().getName() + ":" + userId);
                 Assert.assertNull(userId);
-                Assert.assertNull(statementCode);
                 countDownLatch.countDown();
-            }).start();
+            }).start();                                                
         }
 
         countDownLatch.await(5, TimeUnit.SECONDS);
@@ -36,16 +34,14 @@ public class TestDataPermHelper {
     public void multiThreadTest() throws InterruptedException {
         int threadCount = 2;
 
-        DataPermHelper.applyPermission(USER_ID, STATEMENT_CODE);
+        DataPermHelper.applyPermission(USER_ID);
 
         CountDownLatch countDownLatch = new CountDownLatch(threadCount);
         for (int i = 0; i < threadCount; i++) {
             new Thread(() -> {
-                String statementCode = DataPermHelper.getStatementCode();
                 String userId = DataPermHelper.getUserId();
-                System.out.println(Thread.currentThread().getName() + ":" + userId + " OF " + statementCode);
+                System.out.println(Thread.currentThread().getName() + ":" + userId);
                 Assert.assertEquals(userId, USER_ID);
-                Assert.assertEquals(statementCode, STATEMENT_CODE);
                 countDownLatch.countDown();
             }).start();
         }

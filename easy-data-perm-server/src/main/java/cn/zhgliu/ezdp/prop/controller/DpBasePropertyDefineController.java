@@ -2,17 +2,15 @@ package cn.zhgliu.ezdp.prop.controller;
 
 
 import cn.zhgliu.ezdp.comm.controller.CommonController;
-import cn.zhgliu.ezdp.consts.ValueType;
-import cn.zhgliu.ezdp.web.Pagination;
 import cn.zhgliu.ezdp.prop.entity.DpBasePropertyDefine;
 import cn.zhgliu.ezdp.role.entity.DpRole;
 import cn.zhgliu.ezdp.role.service.IDpRoleService;
+import cn.zhgliu.ezdp.web.Pagination;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
@@ -39,26 +37,37 @@ public class DpBasePropertyDefineController extends CommonController<DpBasePrope
     @RequestMapping("/getPropNameList")
     @ResponseBody
     public List<DpBasePropertyDefine> getPropNameList(String subsystemCode, String valueType) {
-        if (ValueType.PROPERTY.toString().equals(valueType)) {
-            List<DpBasePropertyDefine> objects = new LinkedList<>();
-            DpBasePropertyDefine v = new DpBasePropertyDefine();
-            v.setPropertyName("aaa");
-            v.setPropertyCode("aaa");
-            objects.add(v);
-            v = new DpBasePropertyDefine();
-            v.setPropertyName("bbb");
-            v.setPropertyCode("bbb");
-            objects.add(v);
-            v = new DpBasePropertyDefine();
-            v.setPropertyName("ccc");
-            v.setPropertyCode("ccc");
-            objects.add(v);
-
-
-            return objects;
+        DpBasePropertyDefine param = new DpBasePropertyDefine();
+        param.setSubSystemCode(subsystemCode);
+        List<DpBasePropertyDefine> list = iService.list(new QueryWrapper<>(param));
+        if (list == null) {
+            return new LinkedList<>();
         } else {
-            return new LinkedList();
+
+            return list;
         }
+
+        //
+//        if (ValueType.PROPERTY.toString().equals(valueType)) {
+//            List<DpBasePropertyDefine> objects = new LinkedList<>();
+//            DpBasePropertyDefine v = new DpBasePropertyDefine();
+//            v.setPropertyName("aaa");
+//            v.setPropertyCode("aaa");
+//            objects.add(v);
+//            v = new DpBasePropertyDefine();
+//            v.setPropertyName("bbb");
+//            v.setPropertyCode("bbb");
+//            objects.add(v);
+//            v = new DpBasePropertyDefine();
+//            v.setPropertyName("ccc");
+//            v.setPropertyCode("ccc");
+//            objects.add(v);
+//
+//
+//            return objects;
+//        } else {
+//            return new LinkedList();
+//        }
     }
 
     @Override

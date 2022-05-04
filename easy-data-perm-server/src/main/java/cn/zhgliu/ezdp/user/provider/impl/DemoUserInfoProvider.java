@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class DemoUserInfoProvider implements UserInfoProvider {
     @Override
     public Boolean support(String subsystemCode) {
-        return "aaa".equals(subsystemCode);
+        return "SELLER_SYSTEM".equals(subsystemCode);
     }
 
     @Override
@@ -36,6 +36,8 @@ public class DemoUserInfoProvider implements UserInfoProvider {
         Pagination ret = new Pagination();
 
         List<UserInfo> rows = new ArrayList<>(8);
+        rows.add(new UserInfo().setUserId("1").setUserName("刘大").setEmail("liuda@zhgliu.cn").setMobilePhone("18618457223"));
+        rows.add(new UserInfo().setUserId("2").setUserName("关二").setEmail("guaner@zhgliu.cn").setMobilePhone("18618457223"));
         rows.add(new UserInfo().setUserId("3").setUserName("张三").setEmail("zhangsan@zhgliu.cn").setMobilePhone("18618457223"));
         rows.add(new UserInfo().setUserId("4").setUserName("李四").setEmail("lisi@zhgliu.cn").setMobilePhone("18618457224"));
         rows.add(new UserInfo().setUserId("5").setUserName("朱五").setEmail("zhuwu@zhgliu.cn").setMobilePhone("18618457225"));
@@ -45,11 +47,13 @@ public class DemoUserInfoProvider implements UserInfoProvider {
         ret.setRows(rows);
 
         return ret;
+
+
     }
 
     @Override
-    public Pagination<UserInfo> searchUserByKeywordByPage(String keyword, Integer pageNum, Integer pageSize,
-                                                          Boolean isAsc, String... column) {
+    public Pagination<UserInfo> searchUserByKeywordByPage(String keyword, Integer pageNum, Integer pageSize, Boolean isAsc, String... column) {
+
         Pagination<UserInfo> userInfoPagination = listUserInfoByPage(null, null, null, null, "");
 
         if (StringUtils.isNotEmpty(keyword)) {
@@ -60,7 +64,12 @@ public class DemoUserInfoProvider implements UserInfoProvider {
         }
 
         return userInfoPagination;
+
+
     }
+
+
+
 
 
 }
