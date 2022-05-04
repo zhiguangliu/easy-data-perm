@@ -21,4 +21,9 @@ public class DataPermHelper {
     public static String getStatementCode() {
         return statementCode.get();
     }
+
+    public static void clear() {
+        userId.remove();
+        statementCode.remove();
+    }
 }
