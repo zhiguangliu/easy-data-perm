@@ -50,6 +50,7 @@ public class HttpDataPermRuleFinder implements DataPermRuleFinder {
             uriBuilder.addParameter(ParamNames.SUBSYSTEM, subSystem);
             uriBuilder.addParameter(ParamNames.OPERATION_IDENTIFIER, operationIdentifier);
             uriBuilder.addParameter(ParamNames.USER_ID, userId);
+            log.debug("GET RULE FROM: {}", uriBuilder.build());
             HttpGet get = new HttpGet(uriBuilder.build());
             get.setConfig(config);
             CloseableHttpResponse response = httpClient.execute(get);
