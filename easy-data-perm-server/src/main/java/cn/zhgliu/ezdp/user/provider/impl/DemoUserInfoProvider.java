@@ -15,6 +15,22 @@ import java.util.stream.Collectors;
  */
 @Component
 public class DemoUserInfoProvider implements UserInfoProvider {
+
+    static List<UserInfo> rows = new ArrayList<>(8);
+
+    static {
+        rows.add(new UserInfo().setUserId("1").setUserName("赢总").setEmail("liuda@zhgliu.cn").setMobilePhone("18618457220"));
+        rows.add(new UserInfo().setUserId("2").setUserName("刘大").setEmail("liuda@zhgliu.cn").setMobilePhone("18618457221"));
+        rows.add(new UserInfo().setUserId("3").setUserName("关二").setEmail("guaner@zhgliu.cn").setMobilePhone("18618457222"));
+        rows.add(new UserInfo().setUserId("4").setUserName("张三").setEmail("zhangsan@zhgliu.cn").setMobilePhone("18618457223"));
+        rows.add(new UserInfo().setUserId("5").setUserName("李四").setEmail("lisi@zhgliu.cn").setMobilePhone("18618457224"));
+        rows.add(new UserInfo().setUserId("6").setUserName("朱五").setEmail("zhuwu@zhgliu.cn").setMobilePhone("18618457225"));
+        rows.add(new UserInfo().setUserId("7").setUserName("杨六").setEmail("yangliu@zhgliu.cn").setMobilePhone("18618457226"));
+        rows.add(new UserInfo().setUserId("8").setUserName("牛七").setEmail("niuqi@zhgliu.cn").setMobilePhone("18618457227"));
+        rows.add(new UserInfo().setUserId("9").setUserName("马八").setEmail("maba@zhgliu.cn").setMobilePhone("18618457228"));
+        rows.add(new UserInfo().setUserId("10").setUserName("侯九").setEmail("houjiu@zhgliu.cn").setMobilePhone("18618457229"));
+    }
+
     @Override
     public Boolean support(String subsystemCode) {
         return "SELLER_SYSTEM".equals(subsystemCode);
@@ -22,33 +38,18 @@ public class DemoUserInfoProvider implements UserInfoProvider {
 
     @Override
     public UserInfo getUserInfoById(String userId) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId("1")
-                .setUserName("总返回张三")
-                .setEmail("zhangsan@zhgliu.cn")
-                .setMobilePhone("18618457227");
-        return userInfo;
+        List<UserInfo> collect = rows.stream()
+                .filter(userInfo -> userInfo.getUserId().equals(userId))
+                .collect(Collectors.toList());
+        return collect.get(0);
     }
 
     @Override
     public Pagination<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize,
                                                    Boolean isAsc, String... column) {
         Pagination ret = new Pagination();
-
-        List<UserInfo> rows = new ArrayList<>(8);
-        rows.add(new UserInfo().setUserId("1").setUserName("刘大").setEmail("liuda@zhgliu.cn").setMobilePhone("18618457223"));
-        rows.add(new UserInfo().setUserId("2").setUserName("关二").setEmail("guaner@zhgliu.cn").setMobilePhone("18618457223"));
-        rows.add(new UserInfo().setUserId("3").setUserName("张三").setEmail("zhangsan@zhgliu.cn").setMobilePhone("18618457223"));
-        rows.add(new UserInfo().setUserId("4").setUserName("李四").setEmail("lisi@zhgliu.cn").setMobilePhone("18618457224"));
-        rows.add(new UserInfo().setUserId("5").setUserName("朱五").setEmail("zhuwu@zhgliu.cn").setMobilePhone("18618457225"));
-        rows.add(new UserInfo().setUserId("6").setUserName("杨六").setEmail("yangliu@zhgliu.cn").setMobilePhone("18618457226"));
-        rows.add(new UserInfo().setUserId("7").setUserName("牛七").setEmail("niuqi@zhgliu.cn").setMobilePhone("18618457227"));
-        rows.add(new UserInfo().setUserId("8").setUserName("马八").setEmail("maba@zhgliu.cn").setMobilePhone("18618457228"));
         ret.setRows(rows);
-
         return ret;
-
-
     }
 
     @Override
@@ -67,9 +68,6 @@ public class DemoUserInfoProvider implements UserInfoProvider {
 
 
     }
-
-
-
 
 
 }
