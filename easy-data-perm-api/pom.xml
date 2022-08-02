@@ -6,7 +6,10 @@
 
     <groupId>cn.zhgliu</groupId>
     <artifactId>easy-data-perm-api</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
+    <name>Easy Data Permission</name>
+    <description>The project is a low-coupling, zero-intrusion, and freely configurable data permission management system</description>
+    <url>https://github.com/zhiguangliu/easy-data-perm</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -72,6 +75,19 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- GPG mvn clean deploy -P release -Dgpg.passphrase=YourPassphase -->
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
@@ -98,12 +114,18 @@
         </developer>
     </developers>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
 
-<!--    <scm>-->
-<!--        <connection>scm:git:https://github.com/xxx/xxxx.git</connection>-->
-<!--        <developerConnection>scm:git:https://github.com/xxxx/xxxx.git</developerConnection>-->
-<!--        <url>https://github.com/xxxx/xxxxx</url>-->
-<!--        <tag>0.0.1</tag>-->
-<!--    </scm>-->
+    <scm>
+        <connection>scm:https://github.com/zhiguangliu/easy-data-perm.git</connection>
+        <developerConnection>scm:git:https://github.com/zhiguangliu/easy-data-perm.git</developerConnection>
+        <url>https://github.com/zhiguangliu/easy-data-perm</url>
+        <tag>1.0.0</tag>
+    </scm>
 
 </project>
