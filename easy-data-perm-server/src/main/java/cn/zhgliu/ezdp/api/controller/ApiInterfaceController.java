@@ -2,6 +2,7 @@ package cn.zhgliu.ezdp.api.controller;
 
 import cn.zhgliu.ezdp.consts.MatchingMode;
 import cn.zhgliu.ezdp.consts.ParamNames;
+import cn.zhgliu.ezdp.consts.ValueType;
 import cn.zhgliu.ezdp.model.DataPermissionBaseInfo;
 import cn.zhgliu.ezdp.model.DataPermissionItem;
 import cn.zhgliu.ezdp.model.FullPermissionInfo;
@@ -61,8 +62,11 @@ public class ApiInterfaceController {
                 DataPermissionItem target = new DataPermissionItem();
                 BeanUtils.copyProperties(item, target);
 
-                if ("PROPERTY".equals(item.getValueType())) {
+                if (ValueType.PROPERTY.toString().equals(item.getValueType())) {
                     target.setFieldValue(getPropertyValue(subsystem,userId, item.getFieldValue()));
+                }
+                if (ValueType.USER_ID.toString().equals(item.getValueType())) {
+                    target.setFieldValue(userId);
                 }
 
                 if (!tempMap.containsKey(item.getRoleId())) {

@@ -19,7 +19,7 @@
 
     <modules>
         <module>easy-data-perm-api</module>
-        <module>easy-date-perm-client</module>
+        <module>easy-data-perm-client</module>
         <module>easy-data-perm-server</module>
     </modules>
 

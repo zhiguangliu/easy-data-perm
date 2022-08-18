@@ -20,6 +20,9 @@ public class CommonWebResult {
     public static CommonWebResult success() {
         return new CommonWebResult(200, "success", null);
     }
+    public static CommonWebResult success(Object data) {
+        return new CommonWebResult(200, "success", data);
+    }
 
     public Integer getCode() {
         return code;

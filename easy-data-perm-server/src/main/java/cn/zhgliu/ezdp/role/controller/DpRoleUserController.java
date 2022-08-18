@@ -51,15 +51,15 @@ public class DpRoleUserController extends CommonController<DpRoleUser> {
         userInfo.setUserName(param.getUserName());
         userInfo.setEmail(param.getEmail());
         userInfo.setMobilePhone(param.getMobilePhone());
-        Pagination<UserInfo> user = ((IDpRoleUserService) this.iService).findUser(userInfo, page, rows,isAsc,column);
+        Pagination<UserInfo> user = ((IDpRoleUserService) this.iService).findUser(userInfo, page, rows, isAsc, column);
 
         return createDpRoleUserPagination(user);
     }
 
     @RequestMapping("/searchUserByPage")
     public Pagination<DpRoleUser> searchUserByPage(Integer page, Integer rows,
-                                         String subSystemCode, String keyword,
-                                         Boolean isAsc, String... column) {
+                                                   String subSystemCode, String keyword,
+                                                   Boolean isAsc, String... column) {
         if (StringUtils.isEmpty(subSystemCode)) {
             return new Pagination<>();
         }
@@ -103,19 +103,19 @@ public class DpRoleUserController extends CommonController<DpRoleUser> {
 
         // key是角色id，value是用户角色关系数据记录id
         Map<Integer, Integer> roleUserMap = new HashMap<>();
-        roleUsers.stream().forEach(item->{
+        roleUsers.stream().forEach(item -> {
             roleUserMap.put(item.getRoleId(), item.getId());
         });
 
         List<DpRoleWithChecked> ret = new LinkedList<>();
-        list.stream().forEach(item->{
+        list.stream().forEach(item -> {
             DpRoleWithChecked temp = new DpRoleWithChecked();
             temp.setId(roleUserMap.get(item.getId()));
             temp.setChecked(roleUserMap.containsKey(item.getId()) ? 1 : 0);
             temp.setRoleId(item.getId());
             temp.setUserId(userId);
             temp.setRoleName(item.getRoleName());
-
+            temp.setSubSystemCode(subSystemCode);
             ret.add(temp);
         });
 
@@ -127,7 +127,7 @@ public class DpRoleUserController extends CommonController<DpRoleUser> {
     @RequestMapping("/check")
     public CommonWebResult check(@RequestBody DpRoleUser dpRoleUser) {
         this.iService.save(dpRoleUser);
-        return CommonWebResult.success();
+        return CommonWebResult.success(dpRoleUser);
     }
 
     @RequestMapping("/uncheck")

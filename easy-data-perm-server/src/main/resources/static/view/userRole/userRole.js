@@ -24,6 +24,7 @@ $(function () {
         pagination: false,
         fit: true,
         selectOnCheck: false,
+        checkOnSelect: false,
         onCheck: DpRoleUser.onCheck,
         onUncheck: DpRoleUser.onUncheck,
     });

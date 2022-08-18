@@ -27,5 +27,7 @@ public class DpRoleWithChecked implements Serializable {
 
     private Integer checked;
 
+    private String subSystemCode;
+
 
 }
