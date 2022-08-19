@@ -6,7 +6,7 @@
 
     <groupId>cn.zhgliu</groupId>
     <artifactId>easy-data-perm-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Easy Data Permission</name>
     <description>The project is a low-coupling, zero-intrusion, and freely configurable data permission management system</description>
     <url>https://github.com/zhiguangliu/easy-data-perm</url>
