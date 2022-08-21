@@ -38,8 +38,6 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
      */
     private ThreadLocal<Map<String, Map<String, List<DataPermissionItem>>>> groupedRules;
     /**
-     * 2021-2-4
-     * by:liuzhiguang@ecmsglobal.com
      * 之前的设计存在问题：当一个人有多个角色的时候，查询到的权限列表是将几个角色的权限混到一起返回的，会导致权限混乱。
      * 这次改进是在原来的基础上，再增加一层list，list中按角色将权限分组，最后拼装的时候，将这些组以 or 的关系连接起来。
      **/
@@ -193,7 +191,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
         return ret;
     }
 
-    //根据一个EC的查询条件，创建一个druid的条件对象
+    //根据一个数据权限查询条件，创建一个druid的条件对象
     private SQLBinaryOpExpr createOneRule(DataPermissionItem DatapermissionItem) {
         String valueType = DatapermissionItem.getValueType();
         String fieldValue = DatapermissionItem.getFieldValue();
@@ -241,7 +239,7 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
         }
     }
 
-    //根据EC对象，获取当前字段对应表别名，如果没有，返回null
+    //根据数据权限对象，获取当前字段对应表别名，如果没有，返回null
     private String getTableAlias(DataPermissionItem DatapermissionItem) {
         String targetTableName = DatapermissionItem.getTargetTableName();
         if (StringUtils.isEmpty(targetTableName)) {
@@ -332,15 +330,17 @@ public class PermissionProcessMysqlVisitor extends MySqlASTVisitorAdapter {
         }
 
         //合并权限条件与原来的条件
-        SQLBinaryOpExpr finalWhere = null;
+        SQLExpr finalWhere = null;
         SQLExpr where = currentQuery.getWhere();
         if (where != null && permissionConditions != null) {
             finalWhere = new SQLBinaryOpExpr();
-            finalWhere.setLeft(permissionConditions);
-            finalWhere.setRight(where);
-            finalWhere.setOperator(SQLBinaryOperator.BooleanAnd);
+            ((SQLBinaryOpExpr)finalWhere).setLeft(permissionConditions);
+            ((SQLBinaryOpExpr)finalWhere).setRight(where);
+            ((SQLBinaryOpExpr)finalWhere).setOperator(SQLBinaryOperator.BooleanAnd);
         } else if (permissionConditions != null) {
             finalWhere = permissionConditions;
+        } else if (where != null) {
+            finalWhere = where;
         }
         currentQuery.setWhere(finalWhere);
 
