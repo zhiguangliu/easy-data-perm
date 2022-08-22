@@ -7,6 +7,10 @@
     <groupId>cn.zhgliu</groupId>
     <artifactId>easy-data-perm-client</artifactId>
     <version>1.0.2</version>
+    <name>Easy Data Permission Client</name>
+    <description>The project is a low-coupling, zero-intrusion, and freely configurable data permission management system.Here is the Client of it.</description>
+    <url>https://github.com/zhiguangliu/easy-data-perm</url>
+
 
     <properties>
         <java.version>1.8</java.version>
