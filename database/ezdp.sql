@@ -1,3 +1,6 @@
+create schema easy_dp collate utf8mb4_general_ci;
+use easy_dp;
+
 -- MySQL dump 10.13  Distrib 8.0.30, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: easy_dp

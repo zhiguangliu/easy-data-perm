@@ -1,3 +1,5 @@
+create schema seller_system collate utf8mb4_general_ci;
+use seller_system;
 -- MySQL dump 10.13  Distrib 8.0.30, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: seller_system
