@@ -38,11 +38,20 @@ demo项目中的 cn.zhgliu.ezdpdemo.EzdpDemoApplication
 
 分别访问：
 
+```
 localhost:8765/ezdpdemo/customer/customer/listAllWithPerm?userId=1
-
 localhost:8765/ezdpdemo/customer/customer/listAllWithPerm?userId=2
+```
 
-可以讲userId分别设置为1到11，观察返回结果。其中11会报错，因为没有这个用户的数据权限
+测试数据权限的效果。可以将userId分别设置为1到11，观察返回结果。其中11会报错，因为没有这个用户的数据权限
 
+分别访问：
 
+```
+localhost:8765/ezdpdemo/customer/customer/pageWithPerm?userId=1&current=1&size=2
+localhost:8765/ezdpdemo/customer/customer/pageWithPerm?userId=2&current=1&size=2
+localhost:8765/ezdpdemo/customer/customer/pageWithPerm?userId=3&current=1&size=2
+```
+
+测试数据权限插件与mybatis-plus的分页插件配合的效果
 
