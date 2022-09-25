@@ -5,9 +5,9 @@
 
 为了不让这个文档又臭又长，我们分成几个部分来说。首先，请移步[“快速开始”](QuickStart.md)。完成您的第一次体验。
 
-# DEMO简要代码分析
+# 客户端DEMO简要代码分析
 
-如果您已经成功搭建了环境，体验到了权限的功能，那我们就离成功又近了一步了。下面简要介绍一下demo项目的代码。demo项目是一个典型的 springboot + mybatis + mybatis-plus + mysql 的项目结构。所有的业务逻辑都在cn.zhgliu.ezdpdemo.customer包下面，都是自动生成的。controller中是我们要测试的“查”。
+如果您已经成功搭建了环境，体验到了权限的功能，那我们就离成功又近了一步了。下面简要介绍一下客户端demo项目的代码。demo项目是一个典型的 springboot + mybatis + mybatis-plus + mysql 的项目结构。所有的业务逻辑都在cn.zhgliu.ezdpdemo.customer包下面，都是自动生成的。controller中是我们要测试的“查”。
 
 ```java
     @GetMapping("/listAll")
@@ -57,11 +57,11 @@ String newSql = dataPermClient.addPermissionCondition(sql, userId, statementId);
 
 就得到了新的sql，然后用这个sql去查询就行了。
 
-后面我还会给大家提供更多的方便使用的插件，敬请期待哦。
+后面我还会给大家提供更多的插件，敬请期待哦。
 
 ## 收一下尾
 
-有的同学一定想到刚才在QuickStart中体会的那个分页了，那个分页也是个插件，在sql上加东西的，" limit x , y " 么。这个是怎么实现的呢，是在这里。
+有的同学一定想到刚才在QuickStart中体会的那个分页了，那个分页也是个插件，mybatis-plus自己提供的，在sql上加东西的，" limit x , y " 么。这个是怎么实现的呢，是在这里。
 
 ```
 @Bean
@@ -75,82 +75,200 @@ public MybatisPlusInterceptor mybatisPlusInterceptor(@Autowired DataPermClient d
 
 这里定义了两个插件，一个是分页插件，一个是数据权限插件。都放到mybatis-plus的插件集里就行了。
 
+# 服务器端
 
+体验完了客户端，我们再来看服务器端。服务器端的界面，嗯，怎么说呢，真的非常的服务器端啊。大家先凑合着用。后面再说哈。
 
+首先访问：
 
+http://localhost:8899/ezdp/view/userRole/userRole.html
 
+这里是定义用户的数据权限角色的地方。我们看到上面有个“子系统”的下拉列表，选择“销售系统”，下面的用户就加载出来了。
 
+那么问题来了，服务器端是如何知道别的系统里的用户的呢？这里服务器端提供了一个接口：
 
-## 概述
+```
+public interface UserInfoProvider {
 
+    Boolean support(String subsystemCode);
 
+    UserInfo getUserInfoById(String userId);
 
-数据权限与功能权限相比，复杂性更高。
+    Pagination<UserInfo> listUserInfoByPage(UserInfo userInfo, Integer pageNum, Integer pageSize,Boolean isAsc, String... column);
 
-按控制对象划分，可以分为行权限和列权限两类，行权限是只用户可以看到某一行的数据，列权限是指这些行中，用户可以看到哪些列的数据。
+    Pagination<UserInfo> searchUserByKeywordByPage(String keyword, Integer pageNum, Integer pageSize,Boolean isAsc, String... column);
 
-按控制的操作类型划分，可以分为查询操作权限，插入操作权限、修改操作权限。
+}
+```
 
-目前我们仅实现了对查询操作的行权限控制，其他控制暂未实现。
+查询用户时会遍历所有这个接口的实现，调用support方法，传入子系统编码，找到支持当前子系统的Provider，并使用这个Provider查询用户。
 
-我们可以实现与业务系统松耦合的情况下，对业务代码无侵入的权限控制。
+回到刚才的话题，我们以刘大为例，修改一下用户权限，看下效果。
 
-## 场景描述
+先访问：
 
-嬴总开了一家公司，产品行销全国，需要分区域管理。公司的销售部由嬴总直接担任总监，下面设置了三个销售经理刘大（负责东北）、关二（负责华北）、张三（负责西北）。每个人手下都有若干销售，每个省至少有一名销售负责，对于一些大省由多名销售共同负责。
+```
+http://localhost:8765/ezdpdemo/customer/customer/listAllWithPerm?userId=2
+```
 
-之前为了便于客户管理，公司开发了crm系统，但是当时业务没有这么大，crm没有做数据权限方面的设计。所有人都可以看到所有的客户数据。现在需要增加数据权限控制，让嬴总可以看到所有客户数据，销售经理可以看到自己负责区域的客户数据，负责全省的销售可以看全省数据，多个销售负责一个省的，每个销售只能看到自己负责的那部分数据。
+返回的结果是：
 
-## 需求分析
+```
+[
+    {
+        "id": 11,
+        "customerName": "哈尔滨二龙山有限公司",
+        "areaCode": "黑",
+        "maintainerId": 2,
+        "createrId": 1
+    }
+]
+```
 
-1. 客户信息有所属省份和维系人这两个字段可以用来做权限控制
-2. 对于嬴总，数据权限是“不控制”
-3. 对于销售经理，数据权限是 所属省份 in (A省,B省,C省)
-4. 对于负责全省的销售，数据权限是 所属省份=A省
-5. 对于负责一个省的部分客户的销售，数据权限是 所属省份=A省 and 维系人=销售员id
+可以看到后台执行的sql是
 
-## 测试数据
+```
+select id, customer_name, area_code, maintainer_id, creater_id
+from customer customer
+where customer.area_code = '辽'
+	or customer.area_code = '吉'
+	or customer.area_code = '黑'
+	and (customer_name like '%公司%'
+		and customer_name like '%公司%')
+```
 
-用户数据：
+在刚才的页面上，给刘大增加一个“华北地区销售经理”的权限，还是访问刚才的接口，会发现返回结果变成了：
 
-| 用户id | 用户名 | 职务     | 负责区域                 |
-| ------ | ------ | -------- | ------------------------ |
-| 1      | 嬴总   | 销售总监 | 所有                     |
-| 2      | 刘大   | 销售经理 | 负责东北（黑吉辽）       |
-| 3      | 关二   | 销售经理 | 负责华北（京津冀蒙晋鲁） |
-| 4      | 张三   | 销售经理 | 负责西北（陕甘青宁新）   |
-| 5      | 李四   | 销售员   | 北京城区                 |
-| 6      | 朱五   | 销售员   | 北京郊区                 |
-| 7      | 杨六   | 销售员   | 天津                     |
-| 8      | 牛七   | 销售员   | 河北                     |
-| 9      | 马八   | 销售员   | 内蒙                     |
-| 10     | 侯九   | 销售员   | 山西                     |
+```
+[
+    {
+        "id": 1,
+        "customerName": "北京雾灵山有限公司",
+        "areaCode": "京",
+        "maintainerId": 6,
+        "createrId": 1
+    },
+    {
+        "id": 2,
+        "customerName": "北京慕田峪有限公司",
+        "areaCode": "京",
+        "maintainerId": 6,
+        "createrId": 1
+    },
+    {
+        "id": 3,
+        "customerName": "北京景山有限公司",
+        "areaCode": "京",
+        "maintainerId": 5,
+        "createrId": 1
+    },
+    {
+        "id": 4,
+        "customerName": "天津盘山有限公司",
+        "areaCode": "津",
+        "maintainerId": 7,
+        "createrId": 1
+    },
+    {
+        "id": 5,
+        "customerName": "河北燕山有限公司",
+        "areaCode": "冀",
+        "maintainerId": 8,
+        "createrId": 1
+    },
+    {
+        "id": 6,
+        "customerName": "河北狼牙山有限公司",
+        "areaCode": "冀",
+        "maintainerId": 8,
+        "createrId": 1
+    },
+    {
+        "id": 7,
+        "customerName": "内蒙贺兰山有限公司",
+        "areaCode": "蒙",
+        "maintainerId": 9,
+        "createrId": 1
+    },
+    {
+        "id": 8,
+        "customerName": "内蒙阴山有限公司",
+        "areaCode": "蒙",
+        "maintainerId": 9,
+        "createrId": 1
+    },
+    {
+        "id": 9,
+        "customerName": "山西五台山有限公司",
+        "areaCode": "晋",
+        "maintainerId": 10,
+        "createrId": 1
+    },
+    {
+        "id": 10,
+        "customerName": "山西恒山有限公司",
+        "areaCode": "晋",
+        "maintainerId": 10,
+        "createrId": 1
+    },
+    {
+        "id": 11,
+        "customerName": "哈尔滨二龙山有限公司",
+        "areaCode": "黑",
+        "maintainerId": 2,
+        "createrId": 1
+    }
+]
+```
 
-客户数据：
+可以看到执行的sql是
 
-| 客户id | 客户名称           | 所属省份 | 创建人id | 维系人id |
-| ------ | ------------------ | -------- | -------- | -------- |
-| 1      | 北京雾灵山有限公司 | 京       | 1        | 6        |
-| 2      | 北京慕田峪有限公司 | 京       | 1        | 6        |
-| 3      | 北京景山有限公司   | 京       | 1        | 5        |
-| 4      | 天津盘山有限公司   | 津       | 1        | 7        |
-| 5      | 河北燕山有限公司   | 冀       | 1        | 8        |
-| 6      | 河北狼牙山有限公司 | 冀       | 1        | 8        |
-| 7      | 内蒙贺兰山有限公司 | 蒙       | 1        | 9        |
-| 8      | 内蒙阴山有限公司   | 蒙       | 1        | 9        |
-| 9      | 山西五台山有限公司 | 晋       | 1        | 10       |
-| 10     | 山西恒山有限公司   | 晋       | 1        | 10       |
+```
+ select id, customer_name, area_code, maintainer_id, creater_id
+from customer customer
+where customer.area_code = '辽'
+	or customer.area_code = '吉'
+	or customer.area_code = '黑'
+	or (customer.area_code = '鲁'
+		or customer.area_code = '晋'
+		or customer.area_code = '蒙'
+		or customer.area_code = '冀'
+		or customer.area_code = '津'
+		or customer.area_code = '京')
+	and (customer_name like '%公司%'
+		and customer_name like '%公司%')
+```
 
-### 以华北地区为例，描述一下数据权限的具体需求
+数据权限不同，返回结果也就不同了。
 
-嬴总：没有附加条件
+我们再取消刘大的所有角色，再访问这个接口，就会看到接口报了500，后台也打印了错误信息
 
-关二：所属省份 in ('京','津','冀','蒙','晋','鲁')    其实是  省份=‘京’ or 省份=‘津’ or 省份=‘冀’ or 省份=‘蒙’ or 省份=‘晋’ or 省份=‘鲁’
+```
+{
+    "timestamp": "2022-09-25T15:05:03.517+00:00",
+    "status": 500,
+    "error": "Internal Server Error",
+    "path": "/ezdpdemo/customer/customer/listAllWithPerm"
+}
+```
 
-李四：所属省份 = ‘京’ and 维系人id=5          景山在城里
+```
+2022-09-25 23:05:03.514 ERROR 4359 --- [nio-8765-exec-3] o.a.c.c.C.[.[.[.[dispatcherServlet]      : Servlet.service() for servlet [dispatcherServlet] in context with path [/ezdpdemo] threw exception [Request processing failed; nested exception is org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: cn.zhgliu.ezdp.exception.DataPermRuleFetchException: THE SYSTEM CONFIG THE MATCHINGMODE TO "STRICT", BUT THERE IS NO RULE FOR CURRENT USER. THE USER ID IS:2 AND THE OPERATION IDENTIFIER IS:cn.zhgliu.ezdpdemo.customer.mapper.CustomerMapper.selectList
+```
 
-朱五：所属省份 = ‘京’ and 维系人id=6
+我们看到报错信息：
 
-杨六：所属省份 = ‘津’
+“cn.zhgliu.ezdp.exception.DataPermRuleFetchException: THE SYSTEM CONFIG THE **MATCHINGMODE** TO **"STRICT"**, BUT THERE IS NO RULE FOR CURRENT USER. THE USER ID IS:2 AND THE **OPERATION IDENTIFIER** IS:cn.zhgliu.ezdpdemo.customer.mapper.CustomerMapper.selectList”
 
-牛七、马八、侯九与杨六同理
+不禁会生出这样的疑问：
+
+- MATCHINGMODE是什么呢？
+- 除了“STRICT”，还有什么值可以设置，这些值又有什么不同呢？
+- OPERATION IDENTIFIER又是个什么东西呢？
+
+下面我们就来讲一下这个数据权限系统的设计思路。
+
+# 设计思路
+
+## 
