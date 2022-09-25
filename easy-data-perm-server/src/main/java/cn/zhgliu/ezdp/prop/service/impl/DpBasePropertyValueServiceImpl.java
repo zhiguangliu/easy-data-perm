@@ -25,7 +25,7 @@ public class DpBasePropertyValueServiceImpl extends ServiceImpl<DpBasePropertyVa
     CustomDpBasePropertyValueMapper customDpBasePropertyValueMapper;
 
     @Override
-    public List<String> getProperties(String subsystemCode, String userId, String propertyCode) {
-        return customDpBasePropertyValueMapper.getProperties(subsystemCode, userId, propertyCode);
+    public List<String> getProperties(String subsystemCode, String userId, Integer roleId, String propertyCode) {
+        return customDpBasePropertyValueMapper.getProperties(subsystemCode, userId, roleId, propertyCode);
     }
 }

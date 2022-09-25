@@ -61,18 +61,18 @@ public class ApiInterfaceController {
             ret.stream().forEach(item -> {
                 DataPermissionItem target = new DataPermissionItem();
                 BeanUtils.copyProperties(item, target);
-
+                Integer roleId = item.getRoleId();
                 if (ValueType.PROPERTY.toString().equals(item.getValueType())) {
-                    target.setFieldValue(getPropertyValue(subsystem,userId, item.getFieldValue()));
+                    target.setFieldValue(getPropertyValue(subsystem, userId, roleId, item.getFieldValue()));
                 }
                 if (ValueType.USER_ID.toString().equals(item.getValueType())) {
                     target.setFieldValue(userId);
                 }
 
-                if (!tempMap.containsKey(item.getRoleId())) {
-                    tempMap.put(item.getRoleId(), new LinkedList<>());
+                if (!tempMap.containsKey(roleId)) {
+                    tempMap.put(roleId, new LinkedList<>());
                 }
-                tempMap.get(item.getRoleId()).add(target);
+                tempMap.get(roleId).add(target);
             });
 
             return tempMap.values();
@@ -85,8 +85,8 @@ public class ApiInterfaceController {
     @Resource
     IDpBasePropertyValueService iDpBasePropertyValueService;
 
-    private String getPropertyValue(String subsystem,String userId, String fieldValue) {
-        List<String> properties = iDpBasePropertyValueService.getProperties(subsystem, userId, fieldValue);
+    private String getPropertyValue(String subsystem, String userId, Integer roleId, String fieldValue) {
+        List<String> properties = iDpBasePropertyValueService.getProperties(subsystem, userId, roleId, fieldValue);
 
         return properties.stream().collect(Collectors.joining(","));
     }

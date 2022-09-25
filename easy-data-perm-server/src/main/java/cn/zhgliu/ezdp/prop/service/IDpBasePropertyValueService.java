@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author zhgliu
@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface IDpBasePropertyValueService extends IService<DpBasePropertyValue> {
 
-    List<String> getProperties(String subsystemCode, String userId,String propertyCode);
+    List<String> getProperties(String subsystemCode, String userId, Integer roleId, String propertyCode);
 
 }

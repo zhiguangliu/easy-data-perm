@@ -15,17 +15,18 @@ import java.util.List;
  */
 public interface CustomDpBasePropertyValueMapper {
 
-@Select("SELECT\n" +
-        "\tc.value_code\n" +
-        "FROM\n" +
-        "\tdp_role_user a\n" +
-        "LEFT JOIN dp_role_property_relation b ON a.role_id = b.role_id\n" +
-        "LEFT JOIN dp_base_property_value c ON b.property_value_id = c.id\n" +
-        "WHERE\n" +
-        "\ta.sub_system_code = #{subsystemCode}\n" +
-        "AND a.user_id = #{userId}\n" +
-        "AND c.property_code = #{propertyCode}")
+    @Select("SELECT " +
+            " c.value_code " +
+            " FROM dp_role_user a " +
+            "LEFT JOIN dp_role_property_relation b ON a.role_id = b.role_id " +
+            "LEFT JOIN dp_base_property_value c ON b.property_value_id = c.id " +
+            "WHERE " +
+            "    a.sub_system_code = #{subsystemCode} " +
+            "    AND a.user_id = #{userId} " +
+            "    AND a.role_id = #{roleId} " +
+            "    AND c.property_code = #{propertyCode} ")
     List<String> getProperties(@Param("subsystemCode") String subsystemCode,
                                @Param("userId") String userId,
+                               @Param("roleId") Integer roleId,
                                @Param("propertyCode") String propertyCode);
 }
